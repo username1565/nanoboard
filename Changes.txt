@@ -1092,7 +1092,7 @@ Add two files:
 
 That's all.
 _____________________________________________________________________
-(29.02.2019)  82 files is different. Changed 45 files, added 37 files, 3 files was been deleted - in 14 folders.
+(29.02.2020)  82 files is different. Changed 45 files, added 37 files, 3 files was been deleted - in 14 folders.
 Short changes:
 1. Add lite-server to sharing and hosting the nanoboard. Now this listening on port 7347 (by defalt).
 	-	To disable this - run "nanodb.exe old". See Program.cs source code.
