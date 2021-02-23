@@ -1,1100 +1,56 @@
-Changes:
-File .../nanoboard-restore/nanodb.exe-source/PngTransport/Aggregator.cs:
-	-	Add code to get the "host_and_folder" "protocol://(domain/IP):PORT/folder"
-		and get this from the thread links, like this: "https://0chan.ml/_frct/res/1.html?query=some_query&parameter=value"
-	
-	-	Get (domain/IP):PORT only (variable "host"), and protocol://(domain/IP):PORT/ without folder (variable "protocol_host_port") - too.
-		Now IP:port can be used for threads in "Settings". This will be parsed correctly, if path of PNG is relative, in the response from server.
-	
-	-	Do this once for each thread, not for each picture.
-	
-	-	Add regular expression to get picture_host from imageAddress(url in parsed "href") if this contains "http://" or "https://"
-	
-	-	Block downloading pictures using unknown protocol. For example, "ftp://domain.com/picture.png" in "href" - will be blocked.
-	
-	-	Change imageAddress by adding pictures relative path from href:
-		to "protocol_host_port" (if in href "/images/pic.png" or "./images/pic.png")
-		to "host_and_folder" (if in href "../images/pic.png" or "images/pic.png").
-	
-	-	Add IP-logging attempt prevention:
-		if imageAddress contains keyword "logger", or URL shotrers "bit.ly" and "goo.gl" - picture downloading blocked.
-		if picture host not thie host of the thread (hard prevention).
-		There is possible to comparing protocols+host, because IP-loggers can working on another protocols,
-		but if HTTPS board load images using HTTP, this prevention not good.
-	
-	-	Change m-2ch.ru to m2ch.hk.
-	
-	-	Add description and second condition as operand for prevent IP-logging, but load pictures from "8ch.net (board)" -> "media.8ch.net (images)".
-	
-	-	At line 298: Add re-calculating the picture_host for each imageAddress, because many png's from dobrochan
-		was been blocked, after downloading PNG from iplogger.org - blocked...
+Code commented. See source code.
+Compiled version of all project - is the file "nanodb.exe"
+See changes in other commits - here: https://github.com/username1565/nanoboard/network
 
-File: .../nanoboard-restore/nanodb.exe-source/Server/DbApiHandler.cs
-	-	At line 131: the function was been added parse_number(string string_number), because int.Parse and Int32.Parse not working correctly for me.
-	-	At line 150-151: replaced using this. Now last 50 and las 500 messages working good.
-	
-_____________________________________________________________________________________________________________________________________________
+nanodb.exe - this is a compiled binary file, as result of compilation this source code.
+This is available in releases, here is an only source code of this, not a compiled exe.
 
-Changes in nanoboard 3.2
-_____________________________________________________________________________________________________________________________________________
-Short changes:
-	-	change style small fix.
-	- 	add show-hide post by click on eye. Like on 2ch.hk.
-		Two strings from makaba.css used in the tag <style> in index.html.
-		Functions added in nanoclient.js and can be founded by keyword "post_type_hidden".
-		Post hash saved in LocalStorage.
+BEGIN CHANGELOG:
+__________________________________________________________________________________________________________________________________________________________________
+(22.02.2021)	commit	unknown_hash	1 files changed ? addition and ? deletion.
+	./Changes.txt
+		Rewrite this file with changelog.
+		Now latest changes are available in top of this txt-file, not in he bottom,
+		because over 2k lines here.
+__________________________________________________________________________________________________________________________________________________________________
+(22.02.2021)	commit	2c5295f20abe3109536f06788847eb7b11d32f5a	1 files changed 1 addition and 1 deletion.
+	./Changes.txt
+		Fix year for commit at 29.02.2020, in Changes.txt
+__________________________________________________________________________________________________________________________________________________________________
+(22.02.2021)	commit	0f657b0ff7ca0d63fc1bb9aaba6520b638f932c3	1 files changed with 16 additions and 0 deletions.
+	/.gitattributes
+#		Global git auto-CRLF variants:
+#	
+#	core.autocrlf=true:      core.autocrlf=input:     core.autocrlf=false:
+#	                                             
+#	        repo                     repo                     repo
+#	      ^      V                 ^      V                 ^      V
+#	     /        \               /        \               /        \
+#	crlf->lf    lf->crlf     crlf->lf       \             /          \      
+#	   /            \           /            \           /            \
+#	
 
-	-	add separate tab to create PNG.
-	-	add queue there. Now you can pack specified or selected posts and customize randomizing packing.
-	-	Add queue button for each post. Now by click to this button any post can be added and removed from queue.
-	-	Add page to unpack custom container. 	Now this located by http://127.0.0.1:7346/pages/Open_container.html
-	-	Add page to convert images to PNG.		Now this located here: http://127.0.0.1:7346/pages/convert-to-PNG.html
-	-	Add PNG generator. Bitmap or FractalGen. DataURL sent by GET or POST-query (for big images).
-		See method generate_PNG in /Server/DbApiHandler.cs
-	-	Add more GET and POST-parameters for api-methods there. 
-	-	Update post count /count - now only when collect.
-	-	Update places not by interval, now. There is separate link to update this by click.
-	-	notif - update by long interval, but when notif, this swithed to short interval. See scripts/params.js
-	-	Add check sha256 hash of the file captcha.nbc. This is checking once after try to load captcha. So no need captcha.nbc for readonly mode.
-		URL for downloading capcha is not hardcoded, and can be changed to custom URL - in config-3.json.
-	-	Add static captcha hash to config-3.json and this value is hardcoded in the code. See nanoboard-source/Captcha/Captcha.cs
-	-	Captcha not downloaded if fail, because:
-		1. Github using regirect.
-		2. This is not anonymous action.
-		Need to add proxy, so code to downloading captcha was been commented.
-	-	Proxy! This was been added to collectPNG.
-		See AddProxy method in /PngTransport/DbApiHandler.cs
-		/proxy.txt - list of proxies + comment.
-		When collect, each proxy from this list try to ping, then first successfully proxy using as default, and pictures is downloading using this proxy.
-	-	Change post validation to bypassValidation, when captcha.nbc not found. No error now.
-	-	Add all changes from nanoboard 3.1. See thread http://127.0.0.1:7346/pages/index.html#thread70ca25ba04a241d3b3729611205bf4bb
-		All changes from [3.1 version](https://github.com/username1565/nanoboard/commit/e828b228af6d2a1cc507ff80a59c25a0f5a511f0)
-		According the comment https://github.com/username1565/nanoboard/issues/3#issuecomment-463904141 from issue https://github.com/username1565/nanoboard/issues/3
-		3 level for replyes, when thread loaded from main page.
-		Sorting last posts by date.
-		Bump for threads.
-		Add comparer to make avaiable to compile version 3.1 in .NET Framework 3.5. See post 082a06592e3b241e3c49063524a3ac25
-_____________________________________________________________________________________________________________________________________________
-	Full changes:
-				\Changes.txt			this file - changed. This info added.
-				\pages\index.html		Just change version to 3.1
-				\pages\version.txt		Just change version to 3.1
-				\scripts\nanoclient.js	add function AddBriefView from 3.1
-				\scripts\reply.js		Just change version to 3.1
-				
-				\nanodb.exe-source\nanodb.csproj
-				\nanodb.exe-source\nanodb.sln
-				\nanodb.exe-source\Program.cs
-						copy this 3 files from 3.1 client with changes.
-				\nanodb.exe-source\app.config
-				\nanodb.exe-source\nanodb.csproj.user
-						Add this two files files.
-				\nanodb.exe-source\compile.bat				- add this file to compile nanodb.exe from the source code, using MSBuild.exe
+#Here,
+#This
+*	-text
+#is the same as
+#git config --global core.autocrlf false
 
-				\nanodb.exe-source\Database\Post.cs			- add changes from 3.1 client.
-				\nanodb.exe-source\Database\PostDb.cs		- add changes from 3.1 client + define comparer: "DTComparer : IComparer"
-				\nanodb.exe-source\PngTransport\NBPack.cs	- add two strings from 3.1 client, in the end, after Validate(posts);
-				\nanodb.exe-source\Server\DbApiHandler.cs	- add API command "/api/getlastn" + method GetLastNPosts from 3.1 client.
-				\nanodb.exe-source\Server\ErrorHandler.cs	- just change version.
-				
-			Total changes 16 files: 13 files changed + 3 files added: app.config, nanodb.csproj.user + compile.bat.
-			Compiled win32 (x86) exe - in zip-archive, in Releases.
-_____________________________________________________________________________________________________________________________________________
-Full changes:
+		Create .gitattributes with previous content, to disable autlcrlf, here, on upload files, and run "git clone"-command.
+		Now the End Of Line (EOL) will not be replaced, after upload the files,
+		If files have "CR", "LF", or "CRLF" in EOL, this will be uploaded and downloaded as is, without any changes in EOL.
+		With this, does not matter that value is set globally, in variable:
+		"git config --global core.autocrlf"
+		if this return empty line (means input), or (true), or (false),
+		anyway, with this .gitattributes, files will be uploaded and downloaded with EOL - as is.		
+__________________________________________________________________________________________________________________________________________________________________
+(29.02.2020) commit	8f0edd8d02b9f680f7ce1f70ddd29b8f7c367110	81 files changed with 23,471 additions and 1,130 deletions.
 
-Changes in /root folder
-
-	- 	fractalgen_words.txt
-			add canonical words from OLD original FractalGen v1.1 + comments.
-			You can download standalone FractalGen  here: https://github.com/username1565/FractalGen/releases
-	- 	proxy.txt							- add proxy list + comments.
-	-	update useragent.config				- See aggregator.cs
-	-	Changes.txt							- full changes description.
-
-Changes in "upload/" folder
-	-	MORE-secrets-inside.png		- add some container to test unpack
-	
-Changes in	"styles/"
-	- 	\skins\futaba\nano.css
-			Change futaba style.
-			1. Download modified futaba from post 26cf46231ea152f7da224b572a071901 - there is font changed.
-			2. unzip it.
-			3. Added old code (commented), added comments there.
-			4. Change color for spoiler.
-			5. Set default background for spoiler on_hover.
-			6. Remove whitespaces between "[" and "]" for buttons.
-			7. Change "!important" to "important" for textareas. Now this have dynamic size in "Settings".
-
-Changes in "images/" folder
-	-	error.png - just add this picture when captcha not found or invalid. See another changes about captcha.
-
-Changes in "scripts/" folder:
-	-	checkver.js
-			Version not checking every time on load the page. Interval can be customized in the "Settings".
-			First interval is long (hours) - for checking update online.
-			Second interval is short (minutes) for remind, when updates available.
-			Also in settings saved the last version as text, and last update unix timestamp.
-	-	img2base64.js
-			add filename in bb-code '\n' before picture in post.
-	-	init.js
-			remove display the empty categories.	[][]
-			add functions to working with queue.
-			change intervals of repeat XHR-queries - to repeat by timeouts, and release model with dynamic timeouts.
-			When fail or empty response, and no any notifications or count not changed - XHR-queries not repeated so often,
-			and repeat by long timeout. But when positive response received, timeout will be switched to shorter.
-			for png-collect-avail and png-create-avail this released - too.
-			Update post count when PNG collect - is in progress. No need to update this regularry.
-			/places now can be updated by click on the link. No need to download this every time, using interval, and compare then.
-			Add function function getPosts to load posts by their hashes to display posts in queue onclick by hash.
-			Check is collect finished, after update. When collect still in progress button "Collect PNG" is disabled.
-			"max_connections" = 10 by default. This can be changed in JavaScript and this is not hardcoded value now. This value go to \Server\DbApiHandler.cs using as one from parameters in POST-query.
-			two second parameters is "collect_using_files" and "save_files". RAM collect - added in Aggregator.cs.
-			Old code, with collect using files - saved. Files can be saved from RAM or just not deleted.
-			CreatePNG now sent some parameters in POST-query. Add custom PNG-file, after loading, like on Karasiq-nanoboard.
-	-	last.js
-			add code from client 3.1, but commented.
-			add comment.
-	-	nanoclient.js
-			add some functions
-			add function to relace found hashes to local posts/thread quotes. Now posts can be quoted, if hash only pasted. Also, links from karasiq nanoboard - contains local quote.
-			replace links on files, if bb-code [file] found.
-			add hide-show functions for each posts. Localstorage used to save hidden posts. Only hashes of posts saved there, in array.
-			add hash filename, for noname zipJPEGs
-			AddBriefView from nanoboard 3.1
-	-	notif.js
-			pushNotification don't return now, this just not called.
-	-	onadd.js
-			just add console.log. Maybe, retranslation working with BitMessage.
-	-	params.js
-			add params.
-			repeat get param on fail.
-			modify function parseRegexps, to working with json. Now, keywords from spam-list saved as serialized JSON.
-			add params about check update.
-			add info about captcha.nbc to verify this. Verification of capcha working when try send first post, and try to load captcha, after start nanodb.
-	- 	post.js
-			regexp - changed. Parse big pictures without bytelimit (from karasiq nanoboard, for example).
-			if [filename] found after image, clickable link available to download it. No need to save noname image by open dataURL, now. filename appending onadd image.
-			add code to replace link to local post link inside links from karasiq nanoboard, for example (another format).
-	-	reply.js
-			add function to check is base64 when tags must contains the base64. Append style with error, if not base64 there. Example: "[xmg=12]" in the text of post.
-			add function validate_symbols to validate symbols of captcha-answer. Press any no existing letter there to test.
-			add commented code to make captcha window draggable and resizable (not working).
-			add error, with info from params.js and config-3.json - download captcha, if captcha not found.
-			add length calculator in textarea.
-	-	retranslate.js
-			just add console.log
-	-	search.js
-			add code to replace span in href, and return correct result, after searching the link or fragment of the link.
-	-	sha256.js
-			repair damaged file.
-	-	polyfills.js
-			Add polyfills for endsWith and Array.slice functions, if somewhere this not supporting.
-			
-	-	karasiq-queue.jpg	- just add screen with queue on karasiq nanoboard.
-
-	-	jquery-1.12.0.js
-			In nanoboard 3.0 was used minified jquery.min.js.
-			Inside the source code is available version - v1.12.0.
-			After downloading it here: http://code.jquery.com/jquery-1.12.0.min.js
-			both minified versions was been compared and no any differences.
-			This is full version of this file with readable source code.
-			This was been downloaded here: http://code.jquery.com/jquery-1.12.0.js
-			jquery-1.12.0.js is not minified and have readable code.
-			And this can be used now. Just leave it here, without include.
-	-	bootstrap.min.js
-			In nanoboard 3.0 using minified bootstap.min.js.
-			Inside the source code is available version - v3.3.6.
-			After downloading this version here: https://github.com/twbs/bootstrap/releases/download/v3.3.6/bootstrap-3.3.6-dist.zip
-			from archive was been extracted \bootstrap-3.3.6-dist\js\bootstrap.min.js
-			and compared with bootstrap.min.js from nanoboard client 3.0.
-			No any differences.
-			bootstrap.js from this archive is not minified and have readable code.
-			And this can be used now. Just leave it here, without include.
-	-	bootstrap-3.3.6-dist.zip
-				archive with this bootstrap version. There is inside fonts with glyphicons and bootstrap.css
-				This archive need to verify the complete assembly of "bootstrap", by comparing the hash.
-		-	Folder \bootstrap-3.3.6-dist\fonts\ inside
-				This was been compared with fonts from nanoboard-restore.zip archive.
-				No any differences.
-				boostrap.css is not minified version and have readable source code.
-		-	\bootstrap-3.3.6-dist\css\bootstrap.css inside
-				is not minified and have readable code.
-				And this can be used now. Just leave it here, without include.
-			
-Changes in /pages folder
-	-	index.html
-			add sha256.js and polyfills.js
-			add style from 2ch.hk "show-hide posts wakaba css" to hide posts by click on eye.
-			change version from 3.0 to 3.1
-			add tab to create png. This is not button now.
-			add div createPNG with the page and params for creating PNG.
-			Add script with functions to working with queue.
-	-	params.html
-			Add params.js and checkver.js
-			Add default spam_filter value.
-			Add function to parse Unix timestamp.
-			Reload the page, after timeout, because not all values updated.
-			Add variable to get fontsize in textareas.
-			Resize textareas height by number of rows in content there.
-			working with different parameters.
-			repair ip:port values.
-	-	version.txt
-			Changed automatically, after each compilation.
-			Generated from nanoboard-source/compile.bat
-			Link for update can be customized in scripts/checkver.js
-	-	convert-to-PNG.html 			- convert image to PNG or generate PNG (random bitmap or fractal).
-	-	download_as_binary.html			- page to download base64 as binary file.
-	-	generate_date_for_version.html	- page to generate date and time in OLD canonical format, for version.txt
-	-	generate_HTTP(S)_links.html		- page to generate HTTP and HTTPS-links on the UNCOMMENTED thread with conteiners.
-	-	Open_container.html				- page to unpack custom container http://127.0.0.1:7346/pages/Open_container.html
-											file upload\MORE-secrets-inside.png	by default there, as example.
-	-	test_captcha.html				- just page to test captcha symbol length. 5 is minimum and 5 is maximum I see.
-
-nanodb.exe-source - full changes:
-"\"
-	-	app.config
-	-	nanodb.csproj.user
-			Add this two files from 3.1 nanoboard client.
-	-	nanodb.csproj				update this file from 3.1 add FractalGen.cs, and change Prefer32Bit to true.
-	-	nanodb.sln					update from 3.1 nanoboard client.
-	-	Program.cs					update from 3.1 nanoboard client.
-	-	compile.bat
-			add this file to compile source code, using MSBuild.exe,
-			and save win32 version in the "main"-folder
-			+ generate version.txt in "pages"-folder.
-			Generated version.txt have previous old format, with LF in the end.
-			Also, nanodb.exe is ready to start, if update copied, to unpacked
-			3.0 version with nanoboard 3.0 from restore-archive "nanoboard-restore.zip".
-	
-"Capctha\"
-	- 	Captcha.cs
-			add using with comment.
-			add public static variables about captcha state. This changed after validation and available in the program.
-			add SHA256CheckSum method to calculate sha256 from file.
-			add ToHex method to convert sha256-hash into string. 
-			add download_captcha_file method and comment this.
-			read captcha pathway from config-3.json
-			set bool captcha_found if exists
-			add bypassValidation for posts, if captcha not found or damaged. For readonly mode - no need any captcha now.
-			return 0 in CaptchaIndex because there was been error after try to devide by null, when captcha not found.
-			
-"Database\"
-	-	FileUtil.cs 	- add stream.Close() and stream.Dispose() in three places.
-	-	Post.cs			- add changes from nanoboard 3.1 + comment
-	-	PostDb.cs
-			add changes from nanoboard 3.1 + comment.
-			Define DTComparer : IComparer for .NET Framework 4.0 and maybe v3.5
-			call PostsValidator.Validate with value of bypassValidation
-	-	PostsValidator.cs
-			Add bypassValidation to Validate method.
-			do not return false, if bypassValidation==true.
-			Add bypassValidation in captcha.Captcha.PostHasSolvedCaptcha method. See Captcha. cs.
-
-"PngTransport\"
-	-	Aggregator.cs - many changes.
-			Add proxy, add RAM collect, without using files, repair collect, using files...
-			Add variable to limit connections (as parameter of POST-query, from DbApiHandler.cs).
-			download_timeout_sec can be customized in "Settings" too.
-			Repair error about "file is busy by another process" when program try to delete it, but bitmap not .Dispose()
-			Repair srcIndex, by just replacing two strings (decrement and notif) - after catch.
-			add return to see finish status in the end in console.
-	-	CurlWebClient.cs
-			Add p.WaitForExit(); and .Close(); .Dispose();
-	-	NanoPostPackUtil.cs
-			Change int.Parse to nbpack.NBPackMain.parse_number because int.Parse working bad for me.
-	-	NBPack.cs
-			Add two using for regexp and save image.
-			Change one word.
-			add more arguments to Create method.
-			add more arguments to Unpack methos.
-			add return to don't stop there, and continue.
-			add parse_number there, because int.Parse working bad for me.
-			param queue_image_params can be sent as parameter of POST-query. See scripts/init.js and Server/DbApiHandler.cs by keyword "png-create"
-			custom container available there, now from dataURL in POST-query.
-			different hardcoded parameters, now can be customized.
-			Unpack container can accept parameters from POST-query too. Search "run-nbpack" in the source code and see this in Open_container.html
-			etc..
-	-	PngStegoUtil.cs
-			Add Console.WriteLine with filename, after saving PNG.
-			method ReadHiddenBytesFromPng can accept dataURL now. This is different method, which accept string parameter (pathway or dataURL).
-			another method ReadHiddenBytesFromPng accept Image as argument, and this contains old code.
-	-	PngUtils.cs
-			Just add .Dispose() for bitmap, before return.
-	-	WebClientX.cs
-			Don't replace "https://", "http://", but old code commented.
-			Add proxy as parameter for WebClientX method. Old method - commented.
-			That's all here.
-	-	fractalgen.cs - modify the source of https://github.com/username1565/FractalGen/blob/master/Program.cs
-						to include this as module, and add there.
-						Add link to this file inside nanodb.csproj to compile this, using MSBuild.exe
-	- 	copy_WebClientX.cs
-		copy_Aggregator.cs
-			Try to using from Aggregator.cs the ParseImage method (with proxy),
-			for anonymous downloading "captcha.nbc",
-			from URL https://github.com/Karasiq/nanoboard/releases/download/v1.2.0/ffeaeb19.nbc
-			in /Capctha/Captcha.cs. But downloading failed, because github using redirecting.
-			Just leave this files here, to you see changes, after comparison, and leave this idea here.
-			
-"Server/"
-
-	-	DbApiHandler.cs
-			using imaging to save PNG and fractalgen to generate it.
-			add api command /api/getlastn/ from nanoboard client 3.1 to get last N posts as response to POST query.
-			add api command /api/getposts/ to get posts by array with post-hashes. See comment there.
-			add method GetPosts to getlist with specified posts.
-			add comment for modified api command /api/prange to get last posts by range, or get hashes only by range. See comment there.
-			add comment for modified api command /api/png-create. There is possible to pack specified posts by send array with hashes there.
-				Also, can be sent custom PNG dataURL and something else. See source code.
-			add api command /api/run-nbpack to run nbpack.cs "Simple tool", after sent parameters in POST-query. See source code and description there.
-			add GET or POST parameters to /api/png-collect see comment there.
-			add api command /api/convert-to-PNG - see comment there.
-			add text response for avail functions (collect and create)...
-			add method generate_PNG /api/convert-to-PNG/?generate_PNG,PNG_WIDTH,PNG_HEIGHT - random bitmap or fractalgen.
-	-	ErrorHandler.cs
-			Just change version to nanoboard 3.2
-	-	GetCaptchaTokenHandler.cs
-			Set bool variable and return error if captcha not found. This error with customized link is showing as captcha, in this case.
-	-	HttpServerBuilder.cs
-			Just replace int.Parse to nbpack.NBPackMain.parse_number
-	-	NotificationHandler.cs
-			Just add Thread.Sleep(10);
-	-	TcpServer.cs
-			Just replace int.Parse to nbpack.NBPackMain.parse_number
-			Also, add exception to catch in the end.
-
-_____________________________________________________________________________________________________________________________________________
+Summary:
+81 files is different. Changed 44 files, added 37 files, 3 files was been deleted - in 14 folders.
 
 Short changes:
-	Captcha reloading onclick by captcha image.
-	Parsing container by specified URL.
-	Bytes for each posts and bytes to pack.
-	Repair queue. Return hashes of packed posts, and dequeue it, after packing.
-	Now available hashes of random posts, before packing. Random posts generated on client-side, and can be customized.
-	Addinfo for custom image. This available after loading, in the independent div.
-	Add two inputs in last posts tab to specify values there.
-	Now search is registry-independent.
-	Now files in /download/ folder available in browser.
-	Add list files in /download/ folder and switch this to PNG-only, by default. Now is available the collectPNG from "download" folder.
-____________________________________________________
-Changed files:
-	pages\index.html
-	pages\Open_container.html
-	pages\version.txt
-	scripts\checkver.js
-	scripts\init.js
-	scripts\last.js
-	scripts\nanoclient.js
-	scripts\params.js
-	scripts\polyfills.js
-	scripts\post.js
-	scripts\reply.js
-	scripts\search.js
-	nanodb.exe-source\Database\PostDb.cs
-	nanodb.exe-source\PngTransport\Aggregator.cs
-	nanodb.exe-source\PngTransport\NBPack.cs
-	nanodb.exe-source\Server\DbApiHandler.cs
-	nanodb.exe-source\Server\FileHandler.cs
-	nanodb.exe-source\Server\HttpServerBuilder.cs
-	nanodb.exe-source\Server\MimeType.cs
-____________________________________________________
-Full changes:
-/pages
-	version.txt				- regenerated after recompilation
-	Open_container.html
-		Added parsing container, by URL.
-		Added checkbox to enable/disable preview of loaded image, after downloading by URL.
-		Added function to parse image by URL.
-	index.html
-		Hide "CreatePNG"-tab onclick by last posts item.
-		Add imageInfo for selected custom image. There you can see info, after loading, included "bytes to pack".
-		Add bytes for total and bytes for each post (independent JSON object "var fullhl_bytes = {};").
-		Add info about hashes of random last posts. Now rancom posts can be generated on client-side.
-		Add two input field on last posts tab to specify start index and count of displayed posts.
-		Add variable to save replyTo_Hash+post, when captcha reloading.
-		Add variables to working with this all.
-		Add function to generate random posts.
-		request hashes of all posts with bytelength in GET-query.
-
-
-/scripts
-	checkver.js
-		add whitespace.
-		Change link from link to zip to link to releases page.
-	
-	init.js
-		comment console.log()
-		move notifyAboutNotifications() in the end.
-		add max_bytelength_in_container_to_resize
-		add option to collect without saving, but without deleting previous files.
-		turn back POST-query for packing with queue, and comment previous GET-query, without queue.
-		if random_on_client_side - shuffle array with random posts.
-		Unlock button, after createPNG many times.
-		Add function check_avails_once
-		Add modified notifyAboutNotifications function in the then.
-		Add comment.
-		comment interval for retranslate.
-		Add function run_retranslate
-	last.js
-		working with values in inputs, on show last posts tab.
-	nanoclient.js
-		just add '/n', after queue
-	params.js
-		change default values to the values specified in variables, in beginning. This will be setted if config-3.json not hava this value. Of from this.
-	polyfills.js
-		Change comments
-		add polyfill for Math.trunc() function.
-	post.js
-		Add another function replaceAll_search() to replase highlithting in text.
-		Change regexp in function detectURLs(text) to match URLs with cyrillic symbols.
-	search.js
-		Add code $.get('../api/search/'+search) to test first parameter in the Search method in DbApiHandler (commented). Test passed.
-		Add $.post('../api/search', search+'|'+post_count_limit_for_searching)
-		Repair replace URLs when search.
-		Now search is registry independent.
-	reply.js
-			Add reload captcha onlick.
-	2reply.js
-	working_reply.js
-		dump of reply.js.
-
-/nanodb.exe-source	- рассмотреть подробно.
-/bin		changed, after compilation
-/Database
-	PostDb.cs
-		Return bytes in method RangePresent, when only_hashes=with_bytelength
-/PngTransport
-	Aggregator.cs
-		Add do_not_save_and_do_not_delete variable to don't save files, but don't delete previous. (This need to collect from "download" folder).
-		Skip empty strings in proxy.txt
-		Add method DownloadPNG to download PNG only by specified link, and download, using proxy (if specified).
-	NBPack.cs
-		In PNG Create method, max_bytelength value for PNG list - not hardcoded now and can be sent as parameter of POST-query.
-		Rewrite Create PNG method. See changes there.
-		Add shuffle for result list to pack posts randomly - for more anonymize PNG creator.
-		Return hashes of packed posts.
-		Send one notif for extracted post while collect PNG progress...
-Server\
-	DbApiHandler.cs
-		Add new API command: (/api/download-png, url) to download single PNG container, by specified URL.
-		Add method DownloadPNG.
-		Rewrite Search method to add registry-independent searching.
-		Change
-				//if (msg.Contains(searchString))
-        to
-				if (msg.IndexOf(searchString, StringComparison.CurrentCultureIgnoreCase)!=-1)
-			Now searching is registry-independent.
-		Unlock hardcoded post count limit. Now this can be specified as parameter in POST-query.
-			See search.js: $.post('../api/search', search+'|'+post_count_limit_for_searching).
-			Value of post_count_limit_for_searching defined earlier there.
-
-	HttpServerBuilder.cs
-		Add "download" folder as handler for local HTTP-server.
-		Now is possible to open files http://127.0.0.1:7376/download/image.PNG
-		This need to preview and download container in browser, which was been parsed by specified URL.
-
-	FileHandler.cs
-		Add dictionary with mime-types
-				private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) { //get mime type by file extension
-		This need to return correct mime-type of file in "download" folder.
-		Add filelist there and switch this to PNG-only, by default.
-			Now is possible to make collectPNG from http://127.0.0.1:7376/download/
-			
-	MimeType.cs
-		Add specified string for "dynamic" mime type. This means mime-type select by file extension in "download folder".
-____________________________________________________
-Short changes:
-	Add download-posts and upload-posts functions.
-		Now is possible to download database without parsing containers,
-		and upload posts to another server with API, using functions in retranslate.js.
-		See pages/TEST_download-upload-posts.html
-	Add function to download any file, using list of proxies in proxy.txt.
-		Now captcha.nbc can be downloaded using proxy, from anywhere. But github test - failed.
-	Parameters in params.html now displaing as table. Link to check updates online added there.
-	Small-fixes.
-	
-	
-Full changes:
-	Source code:
-		\nanodb.exe-source\Server\DbApiHandler.cs
-			Lines 38-39: 		Add API commands to download-posts and upload-posts in JSON.
-			Lines 410-414: 		read second argument, if this sent as parameter of POST-query.
-			Lines 538, 548:		Comment test strings.
-			Lines 620, 659:		Add methods Download_Posts and Upload_Posts.
-
-		\nanodb.exe-source\Database\PostDb.cs
-			Lines 573-582:		Add function isMD5() to validate hash format.
-			Lines 583-642:		Add function to download posts by any URL with API.
-			Lines 644-660:		Add function to upload posts to API.
-
-		\nanodb.exe-source\PngTransport\Aggregator.cs
-			Lines 499-601: 		Try to rewrite function Method DownloadPNG to download any files (captcha.nbc, as example), using proxies.
-							Add option to download large file, using proxies. For example, captcha.nbc.
-		
-		\nanodb.exe-source\PngTransport\WebClientX.cs
-			Lines 92-96:		Add method DownloadFile for WebClientX, to download file, using proxy.
-
-	Styles:
-		\styles\skins\futaba\nano.css
-			Lines 7-10:			Add background color for tables in futaba skin.
-
-	Scripts:
-		\scripts\checkver.js
-			Line 66:			Enable checkVersion check online onclick by link, if online===true
-		
-		\scripts\init.js
-			Line 257-342:		Update total_posts_available up to postCount after finishing collect PNG.
-								fix default value in function check_avails(hide=false) to make this working in Google Chrome
-
-		
-		\scripts\last.js
-			Lines 52-80:		Changes in function showLast.
-								fix default value in function showLast(N, from_index=false) to make this working in Google Chrome.
-
-		\scripts\nanoclient.js
-			Replace unknown files to links. Now this can be downloaded as txt files with binary code, and renamed then.
-			Add supporting RIFF-files - .webp, .wav, .avi.
-			Fix base64 verification.
-			Insert eye to show-hide posts inside the link. Now this working with other styles. Add spaces. Show-hide functions - rewrited.
-
-		\scripts\params.js
-			Lines 104-116:		Change default params.
-								_checkVersion - true -> false; temporary disabled.
-
-		\scripts\post.js - Comment old test code.
-
-		\scripts\search.js
-			Changed maximum post count to default 500 + add comment.
-			//now this value not hardcoded in the method Search in \Server\DbApiHandler.cs
-			var post_count_limit_for_searching = 500;
-			fix serarhing value in base64 fragment of picture.
-
-	Pages:
-		pages\index.html
-			Add code to display posts onclick or by input hashes. Add code to check hash in input value.
-	
-		pages\Open_container.html
-			Lines 187-203:	Add test code to try download captcha.nbc from github. Fail, because dynamic link...
-
-		pages\params.html
-			Change displaing params as table.
-	
-		pages\version.txt
-		\nanodb.exe
-			Regenerated, after compilation.
-
-		pages\TEST_download-upload-posts.html
-			Added the function for download-posts by custom URL with API and upload-posts to custom URL, using API.
-			See pages/TEST_download-upload-posts.html source code.
-	
-	\scripts\karasiq-queue.jpg
-		remove this file from releases, to make archive smaller.
-
-____________________________________________________
-Changes:
-\nanodb.exe-source\Database\PostDb.cs
-	Fix uploading and downloading.
-	Add two variables and rename variables inside methods.
-	Now this methods not running until another process in progress.
-
-\pages\TEST_download-upload-posts.html
-	Uncomment all methods for test.
-	Now all tests working if database was deleted before running nanodb.exe
-
-\pages\version.txt
-	Updated, after recompilation.
-____________________________________________________
-10 files changed.
-Changes:
-	\nanodb.exe - recompiled exe.
-	\changes.txt - update changes.
-
-	\nanodb.exe-source\PngTransport\Aggregator.cs
-		- Repair PNG collection - "Collect PNG":
-			Now downloading threads will be stopped if no any response after timeout of timer.
-			Default timeout = DOWNLOAD_TIMEOUT_SEC - and this value can be changed in Settings.
-			Console notification text - changed.
-		- No more than "max_connection" items will be added to downloading list.
-		- Same for downloading images, before parsing.
-		- Now I don't see the OutOfMemoryException within all process "Collect PNG",
-			But this can be because base64 there is in notifications.
-			When downloading and parsing fast, and this updating loading slowly,
-			usage of memory is growing in nanodb.exe server.
-		- change https to http for volgach.ru. Now images downloading there.
-		- Maybe need to add some headers, because many HTTPS threads return request-timeout...
-
-	\nanodb.exe-source\PngTransport\WebClientX.cs
-		Add CancelAsync() for WebClient in WebClientX.
-	
-	\pages\index.html
-		Fix value for input, when this is a first input of hash.
-		Comment some test console.log()
-		
-	\pages\version.txt
-		Regenerated after recompilation.
-		
-	\pages\TEST_download-upload-posts.html
-		Just add descriptions.
-		
-	\scripts\init.js
-		Add comments.
-		
-	\scripts\last.js
-		Fix undefined parameter from_index in POST-query, when selected the item
-		with LastN post in the list, and when page was been updated.
-		Add new from_index as first value of POST input and add it to input field.
-	
-	\scripts\on_add.js
-		Add quotes.
-____________________________________________________
-21.05.2019	(18 files changed.)
-Short changes:
-	Fix bump for threads. Add Fast comparing.
-	Fix srcIndex and OutOfMemoryException errors when parsing and collect PNG from http://02ch.su/b/res/7379.html
-	Add new bb-codes [o], [quote], [sub], [sup], [code]
-	Fix styles when this codes inside spoiler (for dark and futaba only).
-	Add code of the post in separate hidden <pre> and button to show-hide this code.
-	Add links to thread and post in the search.
-	Add searching by post hash.
-	Fix replacement links for posts. Replace HTML-code inside to HTML entitiex before replacement.
-	Do not replace_hash to local quote if this the part of another hash.
-	Exclude PNG and GIF files from change this to hash_binary.txt. Exclude icon with link to download_as_binary.html. Now this displayed as images.
-	Add tilda to regexg for detectURLs. Now URLs with ~ will be parsed good.
-	Add polyfills for String.includes и String.StartsWith to support this in old browsers.
-_____________________________________________________________________
-Full Changes:
-Source code:
-	\nanodb.exe-source\Database\PostDb.cs
-			Fix bump for threads:
-		Lines	15-16:		Add two commented string in DTComparer to see how often this calling. So often...
-		Lines	511-547:	Method GetLastNAnswers changed.
-								Add bool fast = false to skip old posts, make array length lesser, and comparing faster.
-								Rename res to res_ln to don't conflict with res in GetReplies method.
-								Add if(fast==true){ and skip posts with date oldest than 2 years old }.
-									Now, res_ln.Count not so large, and comparing faster.
-								Add output of res_ln.Count in console.
-		Lines	548-641:	Method GetReplies - changed.
-		550, 552, 556, 558:		Add figure brackets.
-				560, 605:		Add sleep 10 milliseconds.
-					563:		Add hash f682830a470200d738d32c69e6c2b8a4 as replyTo for post bdd4b5fc1b3a933367bc6830fef72a35
-				572, 573:		Comment previous comparer.
-				575, 607:		Rewrite this comparer. 
-									Using temp_res now, to don't rewrite previous res.
-									Add skip date in future,
-									using GetLastNAnswers(fast=true),
-									and return unsetted date on catch.
-					603:			Add .Reverse()
-				608, 637:		Add commented code to see sorted array and dates by which this was been sorted.
-				
-	\nanodb.exe-source\PngTransport\Aggregator.cs
-				688, 728:		Add try-catch for all stadies of parsing.
-				757:			Add display InProgress when catch.
-
-	\nanodb.exe-source\PngTransport\NBPack.cs
-			Disable notifications and fix srcIndex error and OutOfMemoryException.
-		Lines 436-512:		Method ParseFile rewrited.
-				443:			Add int posts_added = 0;
-			448-452:			Add try-catch for PutPost
-			456-470:			Add try-catch and comment sent notification.
-									Now no posts with post-content in notifications, and this was been disabled.
-									Now no any catch with srcIndex and OutOfMemoryException.
-			471:				Just increment posts_added++;
-			473-503:			Show numbers of available posts, added posts and skipped posts - in notif only.
-									try-catch added, code commented.
-	
-	\nanodb.exe-source\Server\DbApiHandler.cs
-			487-488:		Change Convert.ToInt32 to nbpack.NBPackMain.parse_number. Now value "5" parsing good.
-			
-			
-	\pages\index.html
-			362-364:		Just add _detectURLs === 'true' to disable replace local quotes, when Detect URLs = false in Settings.
-
-	\pages\TEST_download-upload-posts.html
-			41-44:			Add console.log with synthesis the link with escaped URL.
-							This link can be used to initialize downloading from API of remote nanodb.exe.
-							Downloading test passed. Non existing posts was been successfully added.
-			
-	\scripts\init.js	 - small fix of text and add post.query to save pictures in download folder. save_files parameter there.
-							After disable posts in notification - collect from thread http://02ch.su/b/res/7379.html
-							is successfully, also success for saving all pictures in download,
-							and collect from http://127.0.0.1:7346/download/ then successfully too.
-							No any srcIndex errors and OutOfMemoryException.
-							
-	\scripts\last.js	 - Add links for thread and post for posts in list of last posts.
-	
-	\scripts\nanoclient.js
-						Fix some bugs in parsing.
-		Line 129:		Add replacing html-code inside post to html-entities. Now HTML inside the post - will be displaying as HTML-code.
-		Lines 427-442:	Add show_hide_post_code(hash) - to show code of the post, by hash of this post.
-							Now this display in separate hidden <pre>.
-							Also, available the button for switch post content and code of post.
-		Lines 523-527:	Add figure brackets.
-		Lines 566-568:	Add figure brackets. replace_local_quotes only when _detectURLs === 'true' in "Settings"
-		Lines 581-600:	Append hidden <pre> with the code of post.
-		Lines 641-647:	Exclude PNG and GIF signatures from replacing. Now PNG and GIF images displaying as images.
-		Lines 671-681:	Exclude icon to download as binary. Now this not replaced.
-		Lines 874-915:	Rewrite tabs in code, add figure brackets.
-		
-	\scripts\polyfills.js
-		Lines 133-163:	Add two polyfills for "String.includes" and "String.startsWith"
-
-	\scripts\post.js
-		Line 250:		Add tilda "~" to URL regexp in detectURLs. Now URL's with tilda will be parsed.
-		Lines 262-290:	Exclude closed bracket if another not found in url, and dot in the end of URL.
-							Now this URL will be splitted before replacement.
-		Line 305,326:		Add addition_string, after replacement.
-		Lines: 363-373:	Add new bb-codes [o], [quote], [sub], [sup], [code].
-
-	\scripts\reply.js
-		Line 597:		Change client version from 3.1 to 3.2
-		Line 629-697:	Add double quotes and add buttons for tags [o], [quote], [sub], [sup], [code] in reply window.
-		
-	\scripts\search.js
-		Lines 50-274:	Search by hash and return post/thread/cathegory, if search query seems like hash of post.
-		
-	\styles\skins\dark\nano.css
-		Lines 149-182:	Fix tags style inside spoiler.
-		
-	\styles\skins\futaba\nano.css
-		Lines 193-239:	Fix tags style inside spoiler.
-
-	\pages\version.txt - changed, after recompilation.
-
-	\nanodb.exe - recompiled win32 (x86) exe.
-	
-	\changes.txt - add this changes.
-_____________________________________________________________________
-_____________________________________________________________________
-(25.05.2019) Changed 15 files:
-
-Short changes:
-	styles - Fix styles for bb-codes and link, inside spoiler and quote. Make spoiler more hidden and links inside spoiler.
-	Add preview post in reply window, before send it.
-	Add swich for preview button (show-hide).
-	Add hide preview onclick on some button.
-	Add closing powModal and captcha modal onclick outside.
-	Add autosend captcha onpress EnterKey. If captcha invalid this will be requested again.
-	Add exit to compile.bat, Add start_compile.bat to compile from command-line.
-	Fix deleting the posts. Now this deleting by two steps. Deleted with half-opacity, to show replies, and deleted forever.
-_____________________________________________________________________
-Full changes:
-nanodb.exe-source\Database\PostDb.cs
-		Fix post deletion. Now posts can be removed by two steps - deleted with show replies, and deleted_forever.
-		Fix _index rewrite (sometimes NULL bytes there).
-	Lines 178 - 181: 	Do not add deleted forever post for updating database.
-	Lines 224 - 227: 	If post have replyTo:"deleted_forever" add to _free and remove from _refs.
-	Lines 403 - 405:	Skip deleted_forever posts which not contains in _refs. Maybe, need to add just deleted posts...
-	Lines 454 - 473:	DeletePost method - rewrited.
-							Skip post don't Contains in _refs (nothing to delete).
-							If already deleted - delete forever.
-							Remove from _deleted, add to _free, update values in _refs, rewrite 0.db3 and diff-3.list, and remove from _refs.
-							Add comments to for first delete actions.
-	Lines 540 - 548:	GetLastNAnswers method - rewrited.
-							return empty posts:
-								if hash contains in _free - (for deleted forever)
-								if hash not contains in _rrefs - (no any reply)
-								or if hash contains in _deleted. (maybe no need to exclude this)...
-	Lines 558 - 568:	If post deleted forever - skip this.
-						if post == null - skip this.
-	Lines 596 - 598:	GetReplies method - rewrited. Skip deleted_forever posts.
-	Line	628:		Return default date if (a == null)
-	Lines 699 - 711:	Flush method rewrited. Write _index (index-3.json) after verification, because sometimes there is null bytes.
-	
-nanodb.exe-source\Server\DbApiHandler.cs
-	Line 489:			Try to add fast GetReplies, but code was been commented.
-	Line 699:			Add 999 times to try to delete post (was been 100).
-	Line 709:			Add i to timeout to make timeout dynamic, up to 15 seconds.
-	Line 719:			Add text with hash for server response.
-
-nanodb.exe-source\compile.bat
-	Line 69. Add exit to close window on press by any key.
-	
-nanodb.exe-source\start_compile.bat
-	Add start compile.bat to run this from command line.
-		Now, compilation can be runned by next steps:
-		1. WinKey+R -> cmd.exe
-		2. cd [path_to start_compile.bat]
-		3. start_compile.bat
-		4. Wait compilation. Press any key in the end.
-		5. Window closed. Success. No any WMICTempBatchFile.bat created and WMIC working good in this case.
-
-
-\scripts\api.js
-	Lines 23 - 30: 	function deletePostFromDb changed.
-						Add get-query and console.log when this .done
-\scripts\last.js
-	Lines 125 - 128:	Add opacity for posts, deleted once.
-
-\scripts\nanoclient.js
-	Lines 481 - 484:	Remove <gr>.
-	Lines 728 - 730:	Add opacity for posts, deleted once.
-	Line 740:			skip, when arr[i]===null, was been break at first, but continue now.
-	Lines 763:			commented console.log
-	Line 767:			Add comment.
-	Lines 771 - 775:	Add opacity for posts, deleted once.
-	Line 909:			if(arr[i]===null)continue;
-
-\scripts\post.js
-	Lines 9 - 39:		Remove test console.log
-	Lines 219 - 226:	skip '[' in url.
-	Line 320:			Add style for <pre> with code.
-
-\scripts\reply.js
-	Lines 477 - 497:	In function validate_symbols - add autosend captcha, when '\n' in the end (Enter key pressed).
-	Lines 512 - 536:	Add function to close powModal and captchaModal onclick outside, like for "Insert image" modal.
-	Lines 537 - 648:	rewrite fuction generate_captcha.
-	Lines 667 - 674:	Add remove preview, onclick by button.
-	Lines 684 - 701:	Add Show/Hide Preview button.
-	Lines 709 - 712:	Add remove preview, onclick by button.
-	Line 779:			Add style for <pre> for button with [code]
-
-\scripts\search.js
-	Lines 104 - 106:	Add opacity for posts, deleted once.
-
-\styles\skins\futaba\nano.css
-	Lines 193 - 204:	Fix color for spoiler. Make this more hidden.
-	Lines 210 - 214:	Now background color of spoiler will be transparent onhover.
-	Lines 216 - 220:	Add tags in spoiler.
-	Lines 221 - 241:	Add slow hover for links and fast hide this. Now link in spoiler more hidden.
-	Lines 243 - 246:	Add show <pre> ([code]) in spoiler, on hover.
-	Lines 248 - 261:	Add style for <gr> and styling other tags inside [quote]
-
-\pages\index.html
-	Line 239:			Just change text for preview button, when reply window opened.
-
-\pages\version.txt 		- changed after recompilation.
-\nanodb.exe				- changed, after recompilation.
-\Changes.txt			- Add this changes.
-_____________________________________________________________________
-(19.10.2019) Changed 24 files, added 1 file - in 11 folders:
-
-Changes and additions:
-	Source code:
-		\nanodb.exe-source\PngTransport\NBPack.cs
-			Fix showing the part of dataURL, in catch, if image not parsed correctly, and if this was been parsed from dataURL.
-			No long base64 in console, now.
-			Fix some compile warnings
-
-		\nanodb.exe-source\Server\DbApiHandler.cs
-			Change type for variable "deleted" from bool to int and add additional cases for response when post is deleted.
-			Fix some compile warnings
-
-		\nanodb.exe-source\Server\FileHandler.cs
-			Add title tooltip for h1-element on the page http://IP:PORT/download
-
-		\nanodb.exe-source\Database\Post.cs
-			Fix some compile warnings
-
-		\nanodb.exe-source\Database\PostDb.cs
-			Fix post deletion. Now posts are deleted by two steps. "Delete once" (replies availale in this case) and "Delete forever".
-			Add two additional bool variables to lock files _index and DiffFile, while data is writting there.
-				Switch this to true before each read and write operation, and turn back to false, after.
-				Wait while this is true, and don't read-write, while file is locked.
-			Add the same variable PutPostBusy to don't call PutPost, while it still working.
-				Turn this to true, after call this method, and to false, before each return.
-			Comment the code in the method Flush(), and turn back old code. Maybe this will not write null bytes, if file will be unlocked.
-			Now, there is no any throw exceptions, about file is busy by another process...
-	
-		\nanodb.exe-source\PngTransport\WebClientX.cs
-			Fix OutOfMemoryException:
-				Make WebClientX IDisposable
-				remove bytes - set bytes = null, in DownloadDataAsync, after check e.Result
-				Add some strings to clear memory, in the end of DownloadDataCompleted
-				Add new method DownloadData + curl downloading there.
-				Add new method Dispose to dispose WebClient.
-
-	This still eating many memory...
-		\nanodb.exe-source\PngTransport\Aggregator.cs
-			Fix DOWNLOAD_TIMEOUT_SEC when float.TryParse not working.
-			Fix OutOfMemoryException:
-				Copy method ParseImage, and rename this to ParseImage2
-				Rewrite parseImage to using DownloadData, not DownloadDataAsync with DownloadDataCompleted...
-			Now memory usage not so large.
-				Add memory limit as parameter in config, now this can be customized in the settings (bytes). Default value - 200 MBytes.
-					Now the program wait the garbage collecting,
-					before run another thread of downloading,
-					if this limit was been reached until collectPNG runned.
-			Comment WebClientX.Interrupt() in _Main, and add this before "Finished"
-				Now collectPNG will be processed even after stop the program, or disconnected from Internet.
-				WebClients are pending in the memory, connections is opened.
-				This will be closed for each WebClient, after DOWNLOAD_TIMEOUT_SEC
-			Comment notifs about opened connections. Was been added - just for test.
-			Fix proxy usage. Now PNGCollect working through HTTP and HTTPS proxy.
-				Switch to WebClient to HTTPWebClient.
-				Add modify Ping function, now this TryPingProxy, and this try to ping proxy using itself.
-				Add TryConnectProxy method. This get External IP and compare this IP with IP of used proxy.
-			Modify the cycle to search working proxy.
-				Now proxy can be specified without http:// and https://, just IP:PORT in proxy.txt
-				In this case http:// and https:// proxy will added to the list and can be checked.
-			Add randomize of proxy list.
-			
-		\proxy.txt
-			update proxy list, change format for the items in strings, and add some sources to find HTTP and HTTPS proxies.
-
-	HTML, CSS, JS:
-		\pages\index.html
-			Change version to 3.2
-			Update post count, when this was been changed, after deletion of the post, for example.
-			Update array with byte-lengths of posts, if post-count was been changed.
-			comment test console.log()
-			Add link to draw image in canvas.
-			Add second div with post count, in the top of the page.
-
-		\pages\draw_image.html
-			add page to draw image in canves. This can return file as PNG-picture to download, or xmg-code to insert this image in the post.
-
-		\scripts\api.js
-			Update post count and show title tooltip, when post is deleted.
-
-		\scripts\init.js
-			Add array list_of_categories_hashes, to save the hashes of the posts with categories and find supcategories.
-			show notification, if count of posts - changed.
-			Update post count in the div in the top of the page.
-
-		\scripts\nanoclient.js
-			fix post deletion and add function append_thread_and_post_links
-
-		\scripts\on_add.js
-			Don't show long JSON in console.log, when try to using BitMessage transport. Just notify.
-
-		\scripts\reply.js
-			Add preview for post, before sent.
-			Remove elements powModal and captchaModal onclick outside this, like for modal for "Attach image".
-			function check_base64. Add update preview while textarea is editing, if preview is opened.
-			add left padding for preview.
-			Add function focus_in_the_end_of_last_textarea
-			Hide reply-div and textarea, after post was been sent.
-
-		\scripts\post.js
-			fix function detectImages when the same image posted many times.
-				Now this available in preview without errors. Array with indexes generated additionally.
-			fix detect_files in preview - function applyFormatting. Now the link to files are showing in preview.
-			replace type to "image/png", for PNG pictures, if PNG signature found in base64.
-
-		\scripts\search.js
-			remove image \images\spinner.gif, and add text notify "Wait SEARCH...", to nanomize nanoboard source.
-			add function interval in var dots to move the dots for this notify.
-			Add in 3 places, the text notify if nothing not found, to don't continue rotate spinner, when 404 response was been received.
-
-		\scripts\params.js
-			Add default places, and default skin - "futaba". This will be updated, if there will be empty values, when config.json deleted, for example...
-			Add autoreload the page after set the default values.
-
-		\styles\skins\futaba\nano.css
-			Add resize for post div.
-			Add padding for spoiler.
-			Add resize: none; for .post-inner
-			Add id's for two divs for post-count, in the top and in the bottom.
-
-		\styles\skins\photon\nano.css
-		\styles\nano.css
-		\styles\skins\dark\nano.css
-			Fix spoilers and quotes dark, photon and default skin. Style two divs statusd1, and statusd2.
-
-	Other:
-		\nanodb.exe - changed after re-compilation.
-
-		\pages\version.txt - generated after re-compilation.
-
-		\Changes.txt - this text added.
-		
-	That's all.
-_____________________________________________________________________
-(24.10.2019) Changed 9 files, added 2 files - in 5 folders:
-Short changes:
-	Add many IP_services, and now this is not hardcoded, and can be customized like places, using txt-file, or "Settings", or in params.js.
-	Add proxy in "Settings". Now this can be customized there, or in params.js, or in txt-file.
-	Try to connect each proxy for many IP-Services.
-	Change proxy for each collect, without restart the program, and select only successfully connected to IP_services proxy.
-	Add ability to change proxy, without restart the server program.
-		Now, if Bad Requests received, will be enough to just press the button "Collect PNG" again.
-	Add default values for places, proxy, and IP_services, in \scripts\params.js. Now, this can be customized there, and this is not hardcoded.
-	Small fixes, warnings, etc...
-
-Full changes
-Source code:
-	\nanodb.exe-source\Server\DbApiHandler.cs
-		Just add one string to show notify about starting PNG collect.
-
-	\nanodb.exe-source\PngTransport\Aggregator.cs
-		Add two bool variables - is_already_increased_if_proxy, and is_downloading_error.
-			Now timeout will not be increasing again and again, if first variable will be true.
-			If one item will error of downloading will be showed the notify in the end of collect.
-		Add proxy.txt and externalIPservices.txt, now this like places.txt
-		Add methods to check update values of this from "Settings" or direcly in "config.json"
-		Modify method Aggregate() by adding proxy-list and IP_services, there.
-			Now proxy will be changed after each run the collectPNG.
-		Modify the method TryConnectProxy()
-			Now this try to connect to many IP_Services from list, not one.
-			List can be specified in config.json, params.js, or externalIPservices.txt
-			if first start (wihtout config.json, or with empty values of corresponding parameters there).
-		Modify TryPingProxy() method.
-			Timeout of PingProxy was been increased up to 10 seconds. Maybe this need to be increased up to Maximum TTL.
-		Modify AddProxy() method
-			Check update proxy in the settings on try to add it.
-			Do not read list of proxy from proxy.txt, and read this from internal variable.
-			Return empty proxy if this was been empty string.
-			Add +30 seconds for download timeout if proxy was been used.
-			Show the link of proxy in Console, in the end of method.
-		Change value of variable proxy to empty proxy, to don't set this global once.
-			This value will be setted after starting collect,
-			in the method Aggregate in catch, if this proxy will be null or empty.
-			Else, this will be just changed there.
-		Modify ParseText()
-			Add description about bad connection, if null bytes received.
-			Show notify, when Bad Request responce was been reveived,
-			after try to loading thread using proxy, + notify about error in the end.
-				Because this sucessfully finished.
-			Show notify about error, if one from the item for dowloading was been not downloaded by Time OUT.
-
-	\nanodb.exe-source\Program.cs
-		Add check on the start of program, the update a following parameters:
-		places, proxy, and external_IP_services
-		if this was been updated from the "Settings", or just by editting config.json.
-		Add commented console.log to test from which file was been this calls.
-
-	\scripts\params.js
-		Add two params IP_services and List_of_Proxy
-		Add default links on IP_services and proxies, there.
-		If this was been undefined, and if this parameters will be empty,
-		then this script will set this values in config.json on loading index.html.
-		Else, values will be loaded from here.
-
-	\pages\params.html
-		Resize textareas with proxy, and IP_services, and add title tooltips there.
-		Resize textarea with skins.
-
-	\proxy.txt
-		Update the proxy list - just add examples of records.
-		Add the links to find actual proxy.
-
-	\Changes.txt - add this info, here.
-
-	\nanodb.exe
-		Regenerated after recompilation.
-	\pages\version.txt
-		Regenerated after recompilation.
-
-Add two files:
-	\externalIPservices.txt
-		Add the links of IP-services which return the text with IP after connect there.
-		This need to check proxy connection, if proxy used.
-		Proxy will connect to this services, check external IP of this proxy, and return.
-		Then program will compare IP, and if this is the same IP, then proxy is working, and will be used to download PNG.
-		Else, try to connect to another proxy.
-		Connect to this services using only using proxy, as you can see in the source code.
-		If proxy working, this will be success, else fail.
-		And no any leaks of REAL IP, in this case.
-
-	\places.txt
-		Add default places in this file, just as historical data.
-		Actually, this can be customized in the settings, and /scripts/params.js
-		but on fists loading, when config.json is not found or contains empty values, this data will be loaded from this files.
-
-That's all.
-_____________________________________________________________________
-(29.02.2020)  82 files is different. Changed 45 files, added 37 files, 3 files was been deleted - in 14 folders.
-Short changes:
-1. Add lite-server to sharing and hosting the nanoboard. Now this listening on port 7347 (by defalt).
+1. Add lite-server to sharing and hosting the nanoboard. Now this listening on port 7347 (by defalut).
 	-	To disable this - run "nanodb.exe old". See Program.cs source code.
 	-	Both servers (full-server and lite-server) can working parallel, and accepting the different clients - independent.
 	-	Now, is possible to host nanoboard to make able this online for another anonymous users.
@@ -1181,12 +137,9 @@ Short changes:
 _____________________________________________________________________
 
 Full changes and additions.
-	Removed files:
-	
-	Total:												(+37 files added, 45 files changed = 82 files in difference, in 14 folders, 3 files was been deleted.)
+	Total:														(+37 files added, 44 files changed = 81 files in difference, in 14 folders, 0 files was been deleted.)
 
-	\													(2 files changed)
-		\nanodb.exe					- regenerated, after recompilation.
+	\															(1 files changed)
 		\Changes.txt				- Lines 1095 - 2020 - add this text with changes, in this file.
 
 	\download\created\											(+1 files added, temp_file_to_create_directory.txt)
@@ -1197,7 +150,7 @@ Full changes and additions.
 	\temp\														(+1 files added, temp_file_to_create_directory.txt)
 		Add this folders for lite-server.
 
-	\nanodb.exe-source\											(26 files changed, 2 files deleted)
+	\nanodb.exe-source\											(26 files changed)
 		\start_compile.bat:
 			Line	13			:	start compile.bat %1 - start compile.bat with first command-line argument
 									Now is possible to run "start_compile.bat run"(to just run nanodb, with parameters, inside),
@@ -1467,10 +420,6 @@ Full changes and additions.
 
 		\Database\PostsValidator.cs
 			Lines	18	-	20	:		FromB64.	If source string is empty - return string with error.		
-
-(-)		\PngTransport\copy_Aggregator.cs	- delete this unused file.
-
-(-)		\PngTransport\copy_WebClientX.cs	- delete this unused file.
 
 		\PngTransport\Aggregator.cs
 			Line	120			:	Run nbpack.NBPackMain.PostDatabase.ReadRefs_private(); to update DbRefs and Flush changes, after PNG-Collect, and adding posts in Database.
@@ -1918,9 +867,7 @@ Full changes and additions.
 
 		\version.txt 			- 	regenerated, after compilation, \pages_lite\version.txt 	- 	was been regenerated too.
 	
-	\scripts\													(11 files changed, 1 deleted)
-(-)		\karasiq-queue.jpg		-	Delete this file.
-
+	\scripts\													(11 files changed)
 		\api.js
 			Line	35			:	Add pushNotification(r, 2000); with result response, after delete post on full-server.
 
@@ -2018,8 +965,1498 @@ Full changes and additions.
 		\search.js	
 			Lines	118	-	119	:	Check "post was deleted", not base64 encoded.
 			Lines	174	-	175	:	Add commented get-query.
+That's all.
+__________________________________________________________________________________________________________________________________________________________________
+(29.02.2020) commit	a09383da242ae64cd268ba959ed75224dd957e2c	1 files changed with 0 additions and 0 deletions.
+	Delete "scripts/karasiq-queue.jpg"
+__________________________________________________________________________________________________________________________________________________________________
+(29.02.2020) commit	6096727ddd4cee298f0004a8120aeda34037a8dc	1 files changed with 0 additions and 0 deletions.
+	Delete "nanodb.exe-source/PngTransport/copy_WebClientX.cs"
+__________________________________________________________________________________________________________________________________________________________________
+(29.02.2020) commit	4cdd5f89c2f3fd0dba3d0023aa444a58351754f8	1 files changed with 0 additions and 0 deletions.
+	Delete "nanodb.exe-source/PngTransport/copy_Aggregator.cs"
+__________________________________________________________________________________________________________________________________________________________________
+(21.11.2019) commit e9984842cd69b5636f0d699cab5a70084950fc25	1 files changed with 3 additions and 3 deletions.
+Add event in "pages/draw_image.html".
+__________________________________________________________________________________________________________________________________________________________________
+(24.10.2019) commit 6a4f2732712b134a8fce174eb408793c9cd06279	10 files changed, with 499 additions and 1,459 deletions.
 
-Code commented. See source code.
+12 files different, 8 files changed, added 2 files - in 5 folders.
 
-Compiled version of all project - is the file "nanodb.exe"
-See changes in other commits - here: https://github.com/username1565/nanoboard/network
+Short changes:
+	Add many IP_services, and now this is not hardcoded, and can be customized like places, using txt-file, or "Settings", or in params.js.
+	Add proxy in "Settings". Now this can be customized there, or in params.js, or in txt-file.
+	Try to connect each proxy for many IP-Services.
+	Change proxy for each collect, without restart the program, and select only successfully connected to IP_services proxy.
+	Add ability to change proxy, without restart the server program.
+		Now, if Bad Requests received, will be enough to just press the button "Collect PNG" again.
+	Add default values for places, proxy, and IP_services, in \scripts\params.js. Now, this can be customized there, and this is not hardcoded.
+	Small fixes, warnings, etc...
+
+Full changes
+Source code:
+	\nanodb.exe-source\Server\DbApiHandler.cs
+		Just add one string to show notify about starting PNG collect.
+
+	\nanodb.exe-source\PngTransport\Aggregator.cs
+		Add two bool variables - is_already_increased_if_proxy, and is_downloading_error.
+			Now timeout will not be increasing again and again, if first variable will be true.
+			If one item will error of downloading will be showed the notify in the end of collect.
+		Add proxy.txt and externalIPservices.txt, now this like places.txt
+		Add methods to check update values of this from "Settings" or direcly in "config.json"
+		Modify method Aggregate() by adding proxy-list and IP_services, there.
+			Now proxy will be changed after each run the collectPNG.
+		Modify the method TryConnectProxy()
+			Now this try to connect to many IP_Services from list, not one.
+			List can be specified in config.json, params.js, or externalIPservices.txt
+			if first start (wihtout config.json, or with empty values of corresponding parameters there).
+		Modify TryPingProxy() method.
+			Timeout of PingProxy was been increased up to 10 seconds. Maybe this need to be increased up to Maximum TTL.
+		Modify AddProxy() method
+			Check update proxy in the settings on try to add it.
+			Do not read list of proxy from proxy.txt, and read this from internal variable.
+			Return empty proxy if this was been empty string.
+			Add +30 seconds for download timeout if proxy was been used.
+			Show the link of proxy in Console, in the end of method.
+		Change value of variable proxy to empty proxy, to don't set this global once.
+			This value will be setted after starting collect,
+			in the method Aggregate in catch, if this proxy will be null or empty.
+			Else, this will be just changed there.
+		Modify ParseText()
+			Add description about bad connection, if null bytes received.
+			Show notify, when Bad Request responce was been reveived,
+			after try to loading thread using proxy, + notify about error in the end.
+				Because this sucessfully finished.
+			Show notify about error, if one from the item for dowloading was been not downloaded by Time OUT.
+
+	\nanodb.exe-source\Program.cs
+		Add check on the start of program, the update a following parameters:
+		places, proxy, and external_IP_services
+		if this was been updated from the "Settings", or just by editting config.json.
+		Add commented console.log to test from which file was been this calls.
+
+	\scripts\params.js
+		Add two params IP_services and List_of_Proxy
+		Add default links on IP_services and proxies, there.
+		If this was been undefined, and if this parameters will be empty,
+		then this script will set this values in config.json on loading index.html.
+		Else, values will be loaded from here.
+
+	\pages\params.html
+		Resize textareas with proxy, and IP_services, and add title tooltips there.
+		Resize textarea with skins.
+
+	\proxy.txt
+		Update the proxy list - just add examples of records.
+		Add the links to find actual proxy.
+
+	\Changes.txt - add this info, here.
+
+	\pages\version.txt
+		Regenerated after recompilation nanodb.exe
+
+Add two files:
+	\externalIPservices.txt
+		Add the links of IP-services which return the text with IP after connect there.
+		This need to check proxy connection, if proxy used.
+		Proxy will connect to this services, check external IP of this proxy, and return.
+		Then program will compare IP, and if this is the same IP, then proxy is working, and will be used to download PNG.
+		Else, try to connect to another proxy.
+		Connect to this services using only using proxy, as you can see in the source code.
+		If proxy working, this will be success, else fail.
+		And no any leaks of REAL IP, in this case.
+
+	\places.txt
+		Add default places in this file, just as historical data.
+		Actually, this can be customized in the settings, and /scripts/params.js
+		but on fists loading, when config.json is not found or contains empty values, this data will be loaded from this files.
+
+That's all.
+__________________________________________________________________________________________________________________________________________________________________
+(19.10.2019) commit 45e4f7f04b63a9b564081b149eac32f76743f45b	1 files changed, with 0 additions and 0 deletions.
+	Delete nanodb.exe
+		This is in zip-archive in [Releases](https://github.com/username1565/nanoboard/releases).
+__________________________________________________________________________________________________________________________________________________________________
+(19.10.2019) commit 604cf2be6f256fc4157a9a81d8a6f373ca64c2da	5 files changed, with 1,488 additions and 40 deletions.
+Fix proxy usage.
+5 files changed.
+	Source Code:
+		\nanodb.exe-source\PngTransport\Aggregator.cs
+			Fix proxy usage. Now PNGCollect working through HTTP and HTTPS proxy.
+				Switch to WebClient to HTTPWebClient.
+				Add modify Ping function, now this TryPingProxy, and this try to ping proxy using itself.
+				Add TryConnectProxy method. This get External IP and compare this IP with IP of used proxy.
+			Modify the cycle to search working proxy.
+				Now proxy can be specified without http:// and https://, just IP:PORT in proxy.txt
+				In this case http:// and https:// proxy will added to the list and can be checked.
+			Add randomize of proxy list.
+			
+		\proxy.txt
+			update proxy list, change format for the items in strings, and add some sources to find HTTP and HTTPS proxies.
+
+		\Changes.txt - updated.
+		\pages\version.txt - regenerated after compilation
+		\nanodb.exe - recompiled exe.
+__________________________________________________________________________________________________________________________________________________________________
+(19.10.2019) commit 0710cea17d73eb7aadad7c2326897fa52e3c459c	23 files changed with 1,916 additions and 165 deletions.
+Changed 23 files, added 1 file - in 11 folders:
+
+Changes and additions:
+	Source code:
+		\nanodb.exe-source\PngTransport\NBPack.cs
+			Fix showing the part of dataURL, in catch, if image not parsed correctly, and if this was been parsed from dataURL.
+			No long base64 in console, now.
+			Fix some compile warnings
+
+		\nanodb.exe-source\Server\DbApiHandler.cs
+			Change type for variable "deleted" from bool to int and add additional cases for response when post is deleted.
+			Fix some compile warnings
+
+		\nanodb.exe-source\Server\FileHandler.cs
+			Add title tooltip for h1-element on the page http://IP:PORT/download
+
+		\nanodb.exe-source\Database\Post.cs
+			Fix some compile warnings
+
+		\nanodb.exe-source\Database\PostDb.cs
+			Fix post deletion. Now posts are deleted by two steps. "Delete once" (replies availale in this case) and "Delete forever".
+			Add two additional bool variables to lock files _index and DiffFile, while data is writting there.
+				Switch this to true before each read and write operation, and turn back to false, after.
+				Wait while this is true, and don't read-write, while file is locked.
+			Add the same variable PutPostBusy to don't call PutPost, while it still working.
+				Turn this to true, after call this method, and to false, before each return.
+			Comment the code in the method Flush(), and turn back old code. Maybe this will not write null bytes, if file will be unlocked.
+			Now, there is no any throw exceptions, about file is busy by another process...
+	
+		\nanodb.exe-source\PngTransport\WebClientX.cs
+			Fix OutOfMemoryException:
+				Make WebClientX IDisposable
+				remove bytes - set bytes = null, in DownloadDataAsync, after check e.Result
+				Add some strings to clear memory, in the end of DownloadDataCompleted
+				Add new method DownloadData + curl downloading there.
+				Add new method Dispose to dispose WebClient.
+
+	This still eating many memory...
+		\nanodb.exe-source\PngTransport\Aggregator.cs
+			Fix DOWNLOAD_TIMEOUT_SEC when float.TryParse not working.
+			Fix OutOfMemoryException:
+				Copy method ParseImage, and rename this to ParseImage2
+				Rewrite parseImage to using DownloadData, not DownloadDataAsync with DownloadDataCompleted...
+			Now memory usage not so large.
+				Add memory limit as parameter in config, now this can be customized in the settings (bytes). Default value - 200 MBytes.
+					Now the program wait the garbage collecting,
+					before run another thread of downloading,
+					if this limit was been reached until collectPNG runned.
+			Comment WebClientX.Interrupt() in _Main, and add this before "Finished"
+				Now collectPNG will be processed even after stop the program, or disconnected from Internet.
+				WebClients are pending in the memory, connections is opened.
+				This will be closed for each WebClient, after DOWNLOAD_TIMEOUT_SEC
+			Comment notifs about opened connections. Was been added - just for test.
+			Fix proxy usage. Now PNGCollect working through HTTP and HTTPS proxy.
+				Switch to WebClient to HTTPWebClient.
+				Add modify Ping function, now this TryPingProxy, and this try to ping proxy using itself.
+				Add TryConnectProxy method. This get External IP and compare this IP with IP of used proxy.
+			Modify the cycle to search working proxy.
+				Now proxy can be specified without http:// and https://, just IP:PORT in proxy.txt
+				In this case http:// and https:// proxy will added to the list and can be checked.
+			Add randomize of proxy list.
+			
+		\proxy.txt
+			update proxy list, change format for the items in strings, and add some sources to find HTTP and HTTPS proxies.
+
+	HTML, CSS, JS:
+		\pages\index.html
+			Change version to 3.2
+			Update post count, when this was been changed, after deletion of the post, for example.
+			Update array with byte-lengths of posts, if post-count was been changed.
+			comment test console.log()
+			Add link to draw image in canvas.
+			Add second div with post count, in the top of the page.
+
+		\pages\draw_image.html
+			add page to draw image in canves. This can return file as PNG-picture to download, or xmg-code to insert this image in the post.
+
+		\scripts\api.js
+			Update post count and show title tooltip, when post is deleted.
+
+		\scripts\init.js
+			Add array list_of_categories_hashes, to save the hashes of the posts with categories and find supcategories.
+			show notification, if count of posts - changed.
+			Update post count in the div in the top of the page.
+
+		\scripts\nanoclient.js
+			fix post deletion and add function append_thread_and_post_links
+
+		\scripts\on_add.js
+			Don't show long JSON in console.log, when try to using BitMessage transport. Just notify.
+
+		\scripts\reply.js
+			Add preview for post, before sent.
+			Remove elements powModal and captchaModal onclick outside this, like for modal for "Attach image".
+			function check_base64. Add update preview while textarea is editing, if preview is opened.
+			add left padding for preview.
+			Add function focus_in_the_end_of_last_textarea
+			Hide reply-div and textarea, after post was been sent.
+
+		\scripts\post.js
+			fix function detectImages when the same image posted many times.
+				Now this available in preview without errors. Array with indexes generated additionally.
+			fix detect_files in preview - function applyFormatting. Now the link to files are showing in preview.
+			replace type to "image/png", for PNG pictures, if PNG signature found in base64.
+
+		\scripts\search.js
+			remove image \images\spinner.gif, and add text notify "Wait SEARCH...", to nanomize nanoboard source.
+			add function interval in var dots to move the dots for this notify.
+			Add in 3 places, the text notify if nothing not found, to don't continue rotate spinner, when 404 response was been received.
+
+		\scripts\params.js
+			Add default places, and default skin - "futaba". This will be updated, if there will be empty values, when config.json deleted, for example...
+			Add autoreload the page after set the default values.
+
+		\styles\skins\futaba\nano.css
+			Add resize for post div.
+			Add padding for spoiler.
+			Add resize: none; for .post-inner
+			Add id's for two divs for post-count, in the top and in the bottom.
+
+		\styles\skins\photon\nano.css
+		\styles\nano.css
+		\styles\skins\dark\nano.css
+			Fix spoilers and quotes dark, photon and default skin. Style two divs statusd1, and statusd2.
+
+	Other:
+		\pages\version.txt - generated after re-compilation nanodb.exe.
+
+		\Changes.txt - this text added.
+		
+	That's all.
+__________________________________________________________________________________________________________________________________________________________________
+(25.05.2019) commit 5f193b26050021431b81603cec54403ebf781dfe	14 files changed with 479 additions and 190 deletions.
+
+Changed 14 files:
+Short changes:
+	styles - Fix styles for bb-codes and link, inside spoiler and quote. Make spoiler more hidden and links inside spoiler.
+	Add preview post in reply window, before send it.
+	Add swich for preview button (show-hide).
+	Add hide preview onclick on some button.
+	Add closing powModal and captcha modal onclick outside.
+	Add autosend captcha onpress EnterKey. If captcha invalid this will be requested again.
+	Add exit to compile.bat, Add start_compile.bat to compile from command-line.
+	Fix deleting the posts. Now this deleting by two steps. Deleted with half-opacity, to show replies, and deleted forever.
+
+Full changes:
+nanodb.exe-source\Database\PostDb.cs
+		Fix post deletion. Now posts can be removed by two steps - deleted with show replies, and deleted_forever.
+		Fix _index rewrite (sometimes NULL bytes there).
+	Lines 178 - 181: 	Do not add deleted forever post for updating database.
+	Lines 224 - 227: 	If post have replyTo:"deleted_forever" add to _free and remove from _refs.
+	Lines 403 - 405:	Skip deleted_forever posts which not contains in _refs. Maybe, need to add just deleted posts...
+	Lines 454 - 473:	DeletePost method - rewrited.
+							Skip post don't Contains in _refs (nothing to delete).
+							If already deleted - delete forever.
+							Remove from _deleted, add to _free, update values in _refs, rewrite 0.db3 and diff-3.list, and remove from _refs.
+							Add comments to for first delete actions.
+	Lines 540 - 548:	GetLastNAnswers method - rewrited.
+							return empty posts:
+								if hash contains in _free - (for deleted forever)
+								if hash not contains in _rrefs - (no any reply)
+								or if hash contains in _deleted. (maybe no need to exclude this)...
+	Lines 558 - 568:	If post deleted forever - skip this.
+						if post == null - skip this.
+	Lines 596 - 598:	GetReplies method - rewrited. Skip deleted_forever posts.
+	Line	628:		Return default date if (a == null)
+	Lines 699 - 711:	Flush method rewrited. Write _index (index-3.json) after verification, because sometimes there is null bytes.
+	
+nanodb.exe-source\Server\DbApiHandler.cs
+	Line 489:			Try to add fast GetReplies, but code was been commented.
+	Line 699:			Add 999 times to try to delete post (was been 100).
+	Line 709:			Add i to timeout to make timeout dynamic, up to 15 seconds.
+	Line 719:			Add text with hash for server response.
+
+nanodb.exe-source\compile.bat
+	Line 69. Add exit to close window on press by any key.
+	
+nanodb.exe-source\start_compile.bat
+	Add start compile.bat to run this from command line.
+		Now, compilation can be runned by next steps:
+		1. WinKey+R -> cmd.exe
+		2. cd [path_to start_compile.bat]
+		3. start_compile.bat
+		4. Wait compilation. Press any key in the end.
+		5. Window closed. Success. No any WMICTempBatchFile.bat created and WMIC working good in this case.
+
+
+\scripts\api.js
+	Lines 23 - 30: 	function deletePostFromDb changed.
+						Add get-query and console.log when this .done
+\scripts\last.js
+	Lines 125 - 128:	Add opacity for posts, deleted once.
+
+\scripts\nanoclient.js
+	Lines 481 - 484:	Remove <gr>.
+	Lines 728 - 730:	Add opacity for posts, deleted once.
+	Line 740:			skip, when arr[i]===null, was been break at first, but continue now.
+	Lines 763:			commented console.log
+	Line 767:			Add comment.
+	Lines 771 - 775:	Add opacity for posts, deleted once.
+	Line 909:			if(arr[i]===null)continue;
+
+\scripts\post.js
+	Lines 9 - 39:		Remove test console.log
+	Lines 219 - 226:	skip '[' in url.
+	Line 320:			Add style for <pre> with code.
+
+\scripts\reply.js
+	Lines 477 - 497:	In function validate_symbols - add autosend captcha, when '\n' in the end (Enter key pressed).
+	Lines 512 - 536:	Add function to close powModal and captchaModal onclick outside, like for "Insert image" modal.
+	Lines 537 - 648:	rewrite fuction generate_captcha.
+	Lines 667 - 674:	Add remove preview, onclick by button.
+	Lines 684 - 701:	Add Show/Hide Preview button.
+	Lines 709 - 712:	Add remove preview, onclick by button.
+	Line 779:			Add style for <pre> for button with [code]
+
+\scripts\search.js
+	Lines 104 - 106:	Add opacity for posts, deleted once.
+
+\styles\skins\futaba\nano.css
+	Lines 193 - 204:	Fix color for spoiler. Make this more hidden.
+	Lines 210 - 214:	Now background color of spoiler will be transparent onhover.
+	Lines 216 - 220:	Add tags in spoiler.
+	Lines 221 - 241:	Add slow hover for links and fast hide this. Now link in spoiler more hidden.
+	Lines 243 - 246:	Add show <pre> ([code]) in spoiler, on hover.
+	Lines 248 - 261:	Add style for <gr> and styling other tags inside [quote]
+
+\pages\index.html
+	Line 239:			Just change text for preview button, when reply window opened.
+
+\pages\version.txt 		- changed after recompilation.
+\Changes.txt			- Add this changes.
+__________________________________________________________________________________________________________________________________________________________________
+(21.05.2019)	commit f4a19ce036da9738403073a9f7b227101e9c8874		17 files changed with 1,084 additions and 250 deletions.
+(17 files changed.)
+Short changes:
+	Fix bump for threads. Add Fast comparing.
+	Fix srcIndex and OutOfMemoryException errors when parsing and collect PNG from http://02ch.su/b/res/7379.html
+	Add new bb-codes [o], [quote], [sub], [sup], [code]
+	Fix styles when this codes inside spoiler (for dark and futaba only).
+	Add code of the post in separate hidden <pre> and button to show-hide this code.
+	Add links to thread and post in the search.
+	Add searching by post hash.
+	Fix replacement links for posts. Replace HTML-code inside to HTML entitiex before replacement.
+	Do not replace_hash to local quote if this the part of another hash.
+	Exclude PNG and GIF files from change this to hash_binary.txt. Exclude icon with link to download_as_binary.html. Now this displayed as images.
+	Add tilda to regexg for detectURLs. Now URLs with ~ will be parsed good.
+	Add polyfills for String.includes и String.StartsWith to support this in old browsers.
+_____________________________________________________________________
+Full Changes:
+Source code:
+	\nanodb.exe-source\Database\PostDb.cs
+			Fix bump for threads:
+		Lines	15-16:		Add two commented string in DTComparer to see how often this calling. So often...
+		Lines	511-547:	Method GetLastNAnswers changed.
+								Add bool fast = false to skip old posts, make array length lesser, and comparing faster.
+								Rename res to res_ln to don't conflict with res in GetReplies method.
+								Add if(fast==true){ and skip posts with date oldest than 2 years old }.
+									Now, res_ln.Count not so large, and comparing faster.
+								Add output of res_ln.Count in console.
+		Lines	548-641:	Method GetReplies - changed.
+		550, 552, 556, 558:		Add figure brackets.
+				560, 605:		Add sleep 10 milliseconds.
+					563:		Add hash f682830a470200d738d32c69e6c2b8a4 as replyTo for post bdd4b5fc1b3a933367bc6830fef72a35
+				572, 573:		Comment previous comparer.
+				575, 607:		Rewrite this comparer. 
+									Using temp_res now, to don't rewrite previous res.
+									Add skip date in future,
+									using GetLastNAnswers(fast=true),
+									and return unsetted date on catch.
+					603:			Add .Reverse()
+				608, 637:		Add commented code to see sorted array and dates by which this was been sorted.
+				
+	\nanodb.exe-source\PngTransport\Aggregator.cs
+				688, 728:		Add try-catch for all stadies of parsing.
+				757:			Add display InProgress when catch.
+
+	\nanodb.exe-source\PngTransport\NBPack.cs
+			Disable notifications and fix srcIndex error and OutOfMemoryException.
+		Lines 436-512:		Method ParseFile rewrited.
+				443:			Add int posts_added = 0;
+			448-452:			Add try-catch for PutPost
+			456-470:			Add try-catch and comment sent notification.
+									Now no posts with post-content in notifications, and this was been disabled.
+									Now no any catch with srcIndex and OutOfMemoryException.
+			471:				Just increment posts_added++;
+			473-503:			Show numbers of available posts, added posts and skipped posts - in notif only.
+									try-catch added, code commented.
+	
+	\nanodb.exe-source\Server\DbApiHandler.cs
+			487-488:		Change Convert.ToInt32 to nbpack.NBPackMain.parse_number. Now value "5" parsing good.
+			
+			
+	\pages\index.html
+			362-364:		Just add _detectURLs === 'true' to disable replace local quotes, when Detect URLs = false in Settings.
+
+	\pages\TEST_download-upload-posts.html
+			41-44:			Add console.log with synthesis the link with escaped URL.
+							This link can be used to initialize downloading from API of remote nanodb.exe.
+							Downloading test passed. Non existing posts was been successfully added.
+			
+	\scripts\init.js	 - small fix of text and add post.query to save pictures in download folder. save_files parameter there.
+							After disable posts in notification - collect from thread http://02ch.su/b/res/7379.html
+							is successfully, also success for saving all pictures in download,
+							and collect from http://127.0.0.1:7346/download/ then successfully too.
+							No any srcIndex errors and OutOfMemoryException.
+							
+	\scripts\last.js	 - Add links for thread and post for posts in list of last posts.
+	
+	\scripts\nanoclient.js
+						Fix some bugs in parsing.
+		Line 129:		Add replacing html-code inside post to html-entities. Now HTML inside the post - will be displaying as HTML-code.
+		Lines 427-442:	Add show_hide_post_code(hash) - to show code of the post, by hash of this post.
+							Now this display in separate hidden <pre>.
+							Also, available the button for switch post content and code of post.
+		Lines 523-527:	Add figure brackets.
+		Lines 566-568:	Add figure brackets. replace_local_quotes only when _detectURLs === 'true' in "Settings"
+		Lines 581-600:	Append hidden <pre> with the code of post.
+		Lines 641-647:	Exclude PNG and GIF signatures from replacing. Now PNG and GIF images displaying as images.
+		Lines 671-681:	Exclude icon to download as binary. Now this not replaced.
+		Lines 874-915:	Rewrite tabs in code, add figure brackets.
+		
+	\scripts\polyfills.js
+		Lines 133-163:	Add two polyfills for "String.includes" and "String.startsWith"
+
+	\scripts\post.js
+		Line 250:		Add tilda "~" to URL regexp in detectURLs. Now URL's with tilda will be parsed.
+		Lines 262-290:	Exclude closed bracket if another not found in url, and dot in the end of URL.
+							Now this URL will be splitted before replacement.
+		Line 305,326:		Add addition_string, after replacement.
+		Lines: 363-373:	Add new bb-codes [o], [quote], [sub], [sup], [code].
+
+	\scripts\reply.js
+		Line 597:		Change client version from 3.1 to 3.2
+		Line 629-697:	Add double quotes and add buttons for tags [o], [quote], [sub], [sup], [code] in reply window.
+		
+	\scripts\search.js
+		Lines 50-274:	Search by hash and return post/thread/cathegory, if search query seems like hash of post.
+		
+	\styles\skins\dark\nano.css
+		Lines 149-182:	Fix tags style inside spoiler.
+		
+	\styles\skins\futaba\nano.css
+		Lines 193-239:	Fix tags style inside spoiler.
+
+	\pages\version.txt - changed, after recompilation recompiled win32 (x86) of nanodb.exe.
+
+	\changes.txt - add this changes.
+
+__________________________________________________________________________________________________________________________________________________________________
+(18.05.2019) commit 12f6ce7c2d87f6a799a3d8155faa4eab9e383ba7	9 files changed with 179 additions and 40 deletions.
+
+9 files changed.
+Changes:
+	\changes.txt - update changes.
+
+	\nanodb.exe-source\PngTransport\Aggregator.cs
+		- Repair PNG collection - "Collect PNG":
+			Now downloading threads will be stopped if no any response after timeout of timer.
+			Default timeout = DOWNLOAD_TIMEOUT_SEC - and this value can be changed in Settings.
+			Console notification text - changed.
+		- No more than "max_connection" items will be added to downloading list.
+		- Same for downloading images, before parsing.
+		- Now I don't see the OutOfMemoryException within all process "Collect PNG",
+			But this can be because base64 there is in notifications.
+			When downloading and parsing fast, and this updating loading slowly,
+			usage of memory is growing in nanodb.exe server.
+		- change https to http for volgach.ru. Now images downloading there.
+		- Maybe need to add some headers, because many HTTPS threads return request-timeout...
+
+	\nanodb.exe-source\PngTransport\WebClientX.cs
+		Add CancelAsync() for WebClient in WebClientX.
+	
+	\pages\index.html
+		Fix value for input, when this is a first input of hash.
+		Comment some test console.log()
+		
+	\pages\version.txt
+		Regenerated after recompilation nanodb.exe (compiled binary file, available in releases, here is a source code of this, not a compiled exe).
+		
+	\pages\TEST_download-upload-posts.html
+		Just add descriptions.
+		
+	\scripts\init.js
+		Add comments.
+		
+	\scripts\last.js
+		Fix undefined parameter from_index in POST-query, when selected the item
+		with LastN post in the list, and when page was been updated.
+		Add new from_index as first value of POST input and add it to input field.
+	
+	\scripts\on_add.js
+		Add quotes.
+__________________________________________________________________________________________________________________________________________________________________
+(17.05.2019) commit e5c7088e61f43a55a9e0fc6633706ae3c724d0eb	3 files changes with 40 additions and 13 deletions.
+Changes:
+\nanodb.exe-source\Database\PostDb.cs
+	Fix uploading and downloading.
+	Add two variables and rename variables inside methods.
+	Now this methods not running until another process in progress.
+
+\pages\TEST_download-upload-posts.html
+	Uncomment all methods for test.
+	Now all tests working if database was deleted before running nanodb.exe
+
+\pages\version.txt
+	Updated, after recompilation.
+__________________________________________________________________________________________________________________________________________________________________
+(16.05.2019) commit 29863ff857e5cb47c02bd2d2b296c886d3e02214	18 files changed with 1,115 additions and 306 deletions.
+Short changes:
+	Add download-posts and upload-posts functions.
+		Now is possible to download database without parsing containers,
+		and upload posts to another server with API, using functions in retranslate.js.
+		See pages/TEST_download-upload-posts.html
+	Add function to download any file, using list of proxies in proxy.txt.
+		Now captcha.nbc can be downloaded using proxy, from anywhere. But github test - failed.
+	Parameters in params.html now displaing as table. Link to check updates online added there.
+	Small-fixes.
+	
+	
+Full changes:
+	Source code:
+		\nanodb.exe-source\Server\DbApiHandler.cs
+			Lines 38-39: 		Add API commands to download-posts and upload-posts in JSON.
+			Lines 410-414: 		read second argument, if this sent as parameter of POST-query.
+			Lines 538, 548:		Comment test strings.
+			Lines 620, 659:		Add methods Download_Posts and Upload_Posts.
+
+		\nanodb.exe-source\Database\PostDb.cs
+			Lines 573-582:		Add function isMD5() to validate hash format.
+			Lines 583-642:		Add function to download posts by any URL with API.
+			Lines 644-660:		Add function to upload posts to API.
+
+		\nanodb.exe-source\PngTransport\Aggregator.cs
+			Lines 499-601: 		Try to rewrite function Method DownloadPNG to download any files (captcha.nbc, as example), using proxies.
+							Add option to download large file, using proxies. For example, captcha.nbc.
+		
+		\nanodb.exe-source\PngTransport\WebClientX.cs
+			Lines 92-96:		Add method DownloadFile for WebClientX, to download file, using proxy.
+
+	Styles:
+		\styles\skins\futaba\nano.css
+			Lines 7-10:			Add background color for tables in futaba skin.
+
+	Scripts:
+		\scripts\checkver.js
+			Line 66:			Enable checkVersion check online onclick by link, if online===true
+		
+		\scripts\init.js
+			Line 257-342:		Update total_posts_available up to postCount after finishing collect PNG.
+								fix default value in function check_avails(hide=false) to make this working in Google Chrome
+
+		
+		\scripts\last.js
+			Lines 52-80:		Changes in function showLast.
+								fix default value in function showLast(N, from_index=false) to make this working in Google Chrome.
+
+		\scripts\nanoclient.js
+			Replace unknown files to links. Now this can be downloaded as txt files with binary code, and renamed then.
+			Add supporting RIFF-files - .webp, .wav, .avi.
+			Fix base64 verification.
+			Insert eye to show-hide posts inside the link. Now this working with other styles. Add spaces. Show-hide functions - rewrited.
+
+		\scripts\params.js
+			Lines 104-116:		Change default params.
+								_checkVersion - true -> false; temporary disabled.
+
+		\scripts\post.js - Comment old test code.
+
+		\scripts\search.js
+			Changed maximum post count to default 500 + add comment.
+			//now this value not hardcoded in the method Search in \Server\DbApiHandler.cs
+			var post_count_limit_for_searching = 500;
+			fix serarhing value in base64 fragment of picture.
+
+	Pages:
+		pages\index.html
+			Add code to display posts onclick or by input hashes. Add code to check hash in input value.
+	
+		pages\Open_container.html
+			Lines 187-203:	Add test code to try download captcha.nbc from github. Fail, because dynamic link...
+
+		pages\params.html
+			Change displaing params as table.
+	
+		pages\version.txt
+		\nanodb.exe
+			Regenerated, after compilation.
+
+		pages\TEST_download-upload-posts.html
+			Added the function for download-posts by custom URL with API and upload-posts to custom URL, using API.
+			See pages/TEST_download-upload-posts.html source code.
+	
+	\scripts\karasiq-queue.jpg
+		remove this file from releases, to make archive smaller.
+__________________________________________________________________________________________________________________________________________________________________
+(5.04.2019)	commit 586d3371417f66b131a9bf1c1d9228def15c5101	2 files changed, with 5 additions and 3 deletions.
+Update version from Releases
+	1. /pages/version.txt changed by upload from zip, from Releases.
+	2. Fix Changes.txt
+__________________________________________________________________________________________________________________________________________________________________
+(5.04.2019)	commit 7247c02fef84e78cbb0a1275ccbfca775929c2b2	20 files changed, with 1,979 additions and 193 deletions.
+Short changes:
+	Captcha reloading onclick by captcha image.
+	Parsing container by specified URL.
+	Bytes for each posts and bytes to pack.
+	Repair queue. Return hashes of packed posts, and dequeue it, after packing.
+	Now available hashes of random posts, before packing. Random posts generated on client-side, and can be customized.
+	Addinfo for custom image. This available after loading, in the independent div.
+	Add two inputs in last posts tab to specify values there.
+	Now search is registry-independent.
+	Now files in /download/ folder available in browser.
+	Add list files in /download/ folder and switch this to PNG-only, by default. Now is available the collectPNG from "download" folder.
+____________________________________________________
+Changed files:
+	\Changes.txt
+	\pages\index.html
+	\pages\Open_container.html
+	\pages\version.txt
+	\scripts\checkver.js
+	\scripts\init.js
+	\scripts\last.js
+	\scripts\nanoclient.js
+	\scripts\params.js
+	\scripts\polyfills.js
+	\scripts\post.js
+	\scripts\reply.js
+	\scripts\search.js
+	\nanodb.exe-source\Database\PostDb.cs
+	\nanodb.exe-source\PngTransport\Aggregator.cs
+	\nanodb.exe-source\PngTransport\NBPack.cs
+	\nanodb.exe-source\Server\DbApiHandler.cs
+	\nanodb.exe-source\Server\FileHandler.cs
+	\nanodb.exe-source\Server\HttpServerBuilder.cs
+	\nanodb.exe-source\Server\MimeType.cs
+____________________________________________________
+Full changes:
+/Changes.txt				- update changes in Changes.txt
+/pages
+	version.txt				- regenerated after recompilation
+	Open_container.html
+		Added parsing container, by URL.
+		Added checkbox to enable/disable preview of loaded image, after downloading by URL.
+		Added function to parse image by URL.
+	index.html
+		Hide "CreatePNG"-tab onclick by last posts item.
+		Add imageInfo for selected custom image. There you can see info, after loading, included "bytes to pack".
+		Add bytes for total and bytes for each post (independent JSON object "var fullhl_bytes = {};").
+		Add info about hashes of random last posts. Now rancom posts can be generated on client-side.
+		Add two input field on last posts tab to specify start index and count of displayed posts.
+		Add variable to save replyTo_Hash+post, when captcha reloading.
+		Add variables to working with this all.
+		Add function to generate random posts.
+		request hashes of all posts with bytelength in GET-query.
+
+
+/scripts
+	checkver.js
+		add whitespace.
+		Change link from link to zip to link to releases page.
+	
+	init.js
+		comment console.log()
+		move notifyAboutNotifications() in the end.
+		add max_bytelength_in_container_to_resize
+		add option to collect without saving, but without deleting previous files.
+		turn back POST-query for packing with queue, and comment previous GET-query, without queue.
+		if random_on_client_side - shuffle array with random posts.
+		Unlock button, after createPNG many times.
+		Add function check_avails_once
+		Add modified notifyAboutNotifications function in the then.
+		Add comment.
+		comment interval for retranslate.
+		Add function run_retranslate
+	last.js
+		working with values in inputs, on show last posts tab.
+	nanoclient.js
+		just add '/n', after queue
+	params.js
+		change default values to the values specified in variables, in beginning. This will be setted if config-3.json not hava this value. Of from this.
+	polyfills.js
+		Change comments
+		add polyfill for Math.trunc() function.
+	post.js
+		Add another function replaceAll_search() to replase highlithting in text.
+		Change regexp in function detectURLs(text) to match URLs with cyrillic symbols.
+	search.js
+		Add code $.get('../api/search/'+search) to test first parameter in the Search method in DbApiHandler (commented). Test passed.
+		Add $.post('../api/search', search+'|'+post_count_limit_for_searching)
+		Repair replace URLs when search.
+		Now search is registry independent.
+	reply.js
+			Add reload captcha onlick.
+	2reply.js
+	working_reply.js
+		dump of reply.js.
+
+/nanodb.exe-source	- рассмотреть подробно.
+/bin		changed, after compilation
+/Database
+	PostDb.cs
+		Return bytes in method RangePresent, when only_hashes=with_bytelength
+/PngTransport
+	Aggregator.cs
+		Add do_not_save_and_do_not_delete variable to don't save files, but don't delete previous. (This need to collect from "download" folder).
+		Skip empty strings in proxy.txt
+		Add method DownloadPNG to download PNG only by specified link, and download, using proxy (if specified).
+	NBPack.cs
+		In PNG Create method, max_bytelength value for PNG list - not hardcoded now and can be sent as parameter of POST-query.
+		Rewrite Create PNG method. See changes there.
+		Add shuffle for result list to pack posts randomly - for more anonymize PNG creator.
+		Return hashes of packed posts.
+		Send one notif for extracted post while collect PNG progress...
+Server\
+	DbApiHandler.cs
+		Add new API command: (/api/download-png, url) to download single PNG container, by specified URL.
+		Add method DownloadPNG.
+		Rewrite Search method to add registry-independent searching.
+		Change
+				//if (msg.Contains(searchString))
+        to
+				if (msg.IndexOf(searchString, StringComparison.CurrentCultureIgnoreCase)!=-1)
+			Now searching is registry-independent.
+		Unlock hardcoded post count limit. Now this can be specified as parameter in POST-query.
+			See search.js: $.post('../api/search', search+'|'+post_count_limit_for_searching).
+			Value of post_count_limit_for_searching defined earlier there.
+
+	HttpServerBuilder.cs
+		Add "download" folder as handler for local HTTP-server.
+		Now is possible to open files http://127.0.0.1:7376/download/image.PNG
+		This need to preview and download container in browser, which was been parsed by specified URL.
+
+	FileHandler.cs
+		Add dictionary with mime-types
+				private static IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) { //get mime type by file extension
+		This need to return correct mime-type of file in "download" folder.
+		Add filelist there and switch this to PNG-only, by default.
+			Now is possible to make collectPNG from http://127.0.0.1:7376/download/
+			
+	MimeType.cs
+		Add specified string for "dynamic" mime type. This means mime-type select by file extension in "download folder".
+__________________________________________________________________________________________________________________________________________________________________
+(27.03.2019)	commit 89ce6a941652eb13b67af5045afda82cb0087348		1 files changed, with 5 additions and 3 deletions.
+	Fix scripts/init.js
+__________________________________________________________________________________________________________________________________________________________________
+(26.03.2019)	commit 71013476f8dc174b92839fed2a812a410927a489		1 files changed, with 8 additions and 1 deletion.
+	Fix pages/index.html
+__________________________________________________________________________________________________________________________________________________________________
+(25.03.2019)	commit 1814b104360a625bec903cfb50d540564888ca19		1 files changed, with 19 additions and 1 deletion.
+	/pages/test_captcha.html
+		Add html tag to make this more readable on github
+__________________________________________________________________________________________________________________________________________________________________
+(25.03.2019)	commit c6aae59895d11c072439cb2e50c43421471b0328		1 files changed, with 135 additions and 1 deletion.
+	/pages/Open_container.html
+		Add html tag to make this more readable on github
+__________________________________________________________________________________________________________________________________________________________________
+(25.03.2019)	commit 56f5bef0c1bf3a9f7e643e685ac71f797355199a		54 files changed, with 16,356 additions and 381 deletions.
+Full changes:
+
+Changes in /root folder
+
+	- 	fractalgen_words.txt
+			add canonical words from OLD original FractalGen v1.1 + comments.
+			You can download standalone FractalGen  here: https://github.com/username1565/FractalGen/releases
+	- 	proxy.txt							- add proxy list + comments.
+	-	useragent.config					- update it. See changes in Aggregator.cs
+	-	Changes.txt							- full changes description.
+
+Changes in "upload/" folder
+	-	MORE-secrets-inside.png		- add some container to test unpack
+	
+Changes in	"styles/"
+	- 	\skins\futaba\nano.css
+			Change futaba style.
+			1. Download modified futaba from post 26cf46231ea152f7da224b572a071901 - there is font changed.
+			2. unzip it.
+			3. Added old code (commented), added comments there.
+			4. Change color for spoiler.
+			5. Set default background for spoiler on_hover.
+			6. Remove whitespaces between "[" and "]" for buttons.
+			7. Change "!important" to "important" for textareas. Now this have dynamic size in "Settings".
+	-	\skins\futaba\notif.css			- Add this file
+	-	\skins\futaba\bootstrap.min.css	- Add this file
+
+Changes in "images/" folder
+	-	error.png - just add this picture when captcha not found or invalid. See another changes about captcha.
+
+Changes in "scripts/" folder:
+	-	checkver.js
+			Version not checking every time on load the page. Interval can be customized in the "Settings".
+			First interval is long (hours) - for checking update online.
+			Second interval is short (minutes) for remind, when updates available.
+			Also in settings saved the last version as text, and last update unix timestamp.
+	-	img2base64.js
+			add filename in bb-code '\n' before picture in post.
+	-	init.js
+			remove display the empty categories.	[][]
+			add functions to working with queue.
+			change intervals of repeat XHR-queries - to repeat by timeouts, and release model with dynamic timeouts.
+			When fail or empty response, and no any notifications or count not changed - XHR-queries not repeated so often,
+			and repeat by long timeout. But when positive response received, timeout will be switched to shorter.
+			for png-collect-avail and png-create-avail this released - too.
+			Update post count when PNG collect - is in progress. No need to update this regularry.
+			/places now can be updated by click on the link. No need to download this every time, using interval, and compare then.
+			Add function function getPosts to load posts by their hashes to display posts in queue onclick by hash.
+			Check is collect finished, after update. When collect still in progress button "Collect PNG" is disabled.
+			"max_connections" = 10 by default. This can be changed in JavaScript and this is not hardcoded value now. This value go to \Server\DbApiHandler.cs using as one from parameters in POST-query.
+			two second parameters is "collect_using_files" and "save_files". RAM collect - added in Aggregator.cs.
+			Old code, with collect using files - saved. Files can be saved from RAM or just not deleted.
+			CreatePNG now sent some parameters in POST-query. Add custom PNG-file, after loading, like on Karasiq-nanoboard.
+	-	last.js
+			add code from client 3.1, but commented.
+			add comment.
+	-	nanoclient.js
+			add some functions
+			add function to relace found hashes to local posts/thread quotes. Now posts can be quoted, if hash only pasted. Also, links from karasiq nanoboard - contains local quote.
+			replace links on files, if bb-code [file] found.
+			add hide-show functions for each posts. Localstorage used to save hidden posts. Only hashes of posts saved there, in array.
+			add hash filename, for noname zipJPEGs
+			AddBriefView from nanoboard 3.1
+	-	notif.js
+			pushNotification don't return now, this just not called.
+	-	onadd.js
+			just add console.log. Maybe, retranslation working with BitMessage.
+	-	params.js
+			add params.
+			repeat get param on fail.
+			modify function parseRegexps, to working with json. Now, keywords from spam-list saved as serialized JSON.
+			add params about check update.
+			add info about captcha.nbc to verify this. Verification of capcha working when try send first post, and try to load captcha, after start nanodb.
+	- 	post.js
+			regexp - changed. Parse big pictures without bytelimit (from karasiq nanoboard, for example).
+			if [filename] found after image, clickable link available to download it. No need to save noname image by open dataURL, now. filename appending onadd image.
+			add code to replace link to local post link inside links from karasiq nanoboard, for example (another format).
+	-	reply.js
+			add function to check is base64 when tags must contains the base64. Append style with error, if not base64 there. Example: "[xmg=12]" in the text of post.
+			add function validate_symbols to validate symbols of captcha-answer. Press any no existing letter there to test.
+			add commented code to make captcha window draggable and resizable (not working).
+			add error, with info from params.js and config-3.json - download captcha, if captcha not found.
+			add length calculator in textarea.
+	-	retranslate.js
+			just add console.log
+	-	search.js
+			add code to replace span in href, and return correct result, after searching the link or fragment of the link.
+
+	-	polyfills.js
+			Add polyfills for endsWith and Array.slice functions, if somewhere this not supporting.
+			
+	-	karasiq-queue.jpg	- just add screen with queue on karasiq nanoboard.
+
+	-	jquery-1.12.0.js
+			In nanoboard 3.0 was used minified jquery.min.js.
+			Inside the source code is available version - v1.12.0.
+			After downloading it here: http://code.jquery.com/jquery-1.12.0.min.js
+			both minified versions was been compared and no any differences.
+			This is full version of this file with readable source code.
+			This was been downloaded here: http://code.jquery.com/jquery-1.12.0.js
+			jquery-1.12.0.js is not minified and have readable code.
+			And this can be used now. Just leave it here, without include.
+	-	bootstrap-3.3.6-dist.zip
+				archive with this bootstrap version. There is inside fonts with glyphicons and bootstrap.css
+				This archive need to verify the complete assembly of "bootstrap", by comparing the hash.
+
+				In nanoboard 3.0 using minified bootstap.min.js.
+				Inside the source code is available version - v3.3.6.
+				After downloading this version here: https://github.com/twbs/bootstrap/releases/download/v3.3.6/bootstrap-3.3.6-dist.zip
+				from archive was been extracted \bootstrap-3.3.6-dist\js\bootstrap.min.js
+				and compared with bootstrap.min.js from nanoboard client 3.0.
+				No any differences.
+				bootstrap.js from this archive is not minified and have readable code.
+				And this can be used now. Just leave it here, without include.
+		-	Folder \bootstrap-3.3.6-dist\fonts\ inside
+				This was been compared with fonts from nanoboard-restore.zip archive.
+				No any differences.
+				boostrap.css is not minified version and have readable source code.
+		-	\bootstrap-3.3.6-dist\css\bootstrap.css inside
+				is not minified and have readable code.
+				And this can be used now. Just leave it here, without include.
+			
+Changes in /pages folder
+	-	index.html
+			add sha256.js and polyfills.js
+			add style from 2ch.hk "show-hide posts wakaba css" to hide posts by click on eye.
+			change version from 3.0 to 3.1
+			add tab to create png. This is not button now.
+			add div createPNG with the page and params for creating PNG.
+			Add script with functions to working with queue.
+	-	params.html
+			Add params.js and checkver.js
+			Add default spam_filter value.
+			Add function to parse Unix timestamp.
+			Reload the page, after timeout, because not all values updated.
+			Add variable to get fontsize in textareas.
+			Resize textareas height by number of rows in content there.
+			working with different parameters.
+			repair ip:port values.
+	-	version.txt
+			Changed automatically, after each compilation.
+			Generated from nanoboard-source/compile.bat
+			Link for update can be customized in scripts/checkver.js
+	-	convert-to-PNG.html 			- convert image to PNG or generate PNG (random bitmap or fractal).
+	-	Open_container.html				- page to unpack custom container http://127.0.0.1:7346/pages/Open_container.html
+											file upload\MORE-secrets-inside.png	by default there, as example.
+	-	test_captcha.html				- just page to test captcha symbol length. 5 is minimum and 5 is maximum I see.
+
+nanodb.exe-source - full changes:
+"\"
+	-	nanodb.csproj				update this file from 3.1 add FractalGen.cs, and change Prefer32Bit to true.
+	-	compile.bat
+			add this file to compile source code, using MSBuild.exe,
+			and save win32 version in the "main"-folder
+			+ generate version.txt in "pages"-folder.
+			Generated version.txt have previous old format, with LF in the end.
+			Also, nanodb.exe is ready to start, if update copied, to unpacked
+			3.0 version with nanoboard 3.0 from restore-archive "nanoboard-restore.zip".
+	
+"Capctha\"
+	- 	Captcha.cs
+			add using with comment.
+			add public static variables about captcha state. This changed after validation and available in the program.
+			add SHA256CheckSum method to calculate sha256 from file.
+			add ToHex method to convert sha256-hash into string. 
+			add download_captcha_file method and comment this.
+			read captcha pathway from config-3.json
+			set bool captcha_found if exists
+			add bypassValidation for posts, if captcha not found or damaged. For readonly mode - no need any captcha now.
+			return 0 in CaptchaIndex because there was been error after try to devide by null, when captcha not found.
+			
+"Database\"
+	-	FileUtil.cs 	- add stream.Close() and stream.Dispose() in three places.
+	-	Post.cs			- add changes from nanoboard 3.1 + comment
+	-	PostDb.cs
+			add changes from nanoboard 3.1 + comment.
+			Define DTComparer : IComparer for .NET Framework 4.0 and maybe v3.5
+			call PostsValidator.Validate with value of bypassValidation
+	-	PostsValidator.cs
+			Add bypassValidation to Validate method.
+			do not return false, if bypassValidation==true.
+			Add bypassValidation in captcha.Captcha.PostHasSolvedCaptcha method. See Captcha. cs.
+
+"PngTransport\"
+	-	Aggregator.cs - many changes.
+			Add proxy, add RAM collect, without using files, repair collect, using files...
+			Add variable to limit connections (as parameter of POST-query, from DbApiHandler.cs).
+			download_timeout_sec can be customized in "Settings" too.
+			Repair error about "file is busy by another process" when program try to delete it, but bitmap not .Dispose()
+			Repair srcIndex, by just replacing two strings (decrement and notif) - after catch.
+			add return to see finish status in the end in console.
+	-	CurlWebClient.cs
+			Add p.WaitForExit(); and .Close(); .Dispose();
+	-	NanoPostPackUtil.cs
+			Change int.Parse to nbpack.NBPackMain.parse_number because int.Parse working bad for me.
+	-	NBPack.cs
+			Add two using for regexp and save image.
+			Change one word.
+			add more arguments to Create method.
+			add more arguments to Unpack methos.
+			add return to don't stop there, and continue.
+			add parse_number there, because int.Parse working bad for me.
+			param queue_image_params can be sent as parameter of POST-query. See scripts/init.js and Server/DbApiHandler.cs by keyword "png-create"
+			custom container available there, now from dataURL in POST-query.
+			different hardcoded parameters, now can be customized.
+			Unpack container can accept parameters from POST-query too. Search "run-nbpack" in the source code and see this in Open_container.html
+			etc..
+	-	PngStegoUtil.cs
+			Add Console.WriteLine with filename, after saving PNG.
+			method ReadHiddenBytesFromPng can accept dataURL now. This is different method, which accept string parameter (pathway or dataURL).
+			another method ReadHiddenBytesFromPng accept Image as argument, and this contains old code.
+	-	PngUtils.cs
+			Just add .Dispose() for bitmap, before return.
+	-	WebClientX.cs
+			Don't replace "https://", "http://", but old code commented.
+			Add proxy as parameter for WebClientX method. Old method - commented.
+			That's all here.
+	-	fractalgen.cs - modify the source of https://github.com/username1565/FractalGen/blob/master/Program.cs
+						to include this as module, and add there.
+						Add link to this file inside nanodb.csproj to compile this, using MSBuild.exe
+	- 	copy_WebClientX.cs
+		copy_Aggregator.cs
+			Try to using from Aggregator.cs the ParseImage method (with proxy),
+			for anonymous downloading "captcha.nbc",
+			from URL https://github.com/Karasiq/nanoboard/releases/download/v1.2.0/ffeaeb19.nbc
+			in /Capctha/Captcha.cs. But downloading failed, because github using redirecting.
+			Just leave this files here, to you see changes, after comparison, and leave this idea here.
+			
+"Server/"
+
+	-	DbApiHandler.cs
+			using imaging to save PNG and fractalgen to generate it.
+			add api command /api/getlastn/ from nanoboard client 3.1 to get last N posts as response to POST query.
+			add api command /api/getposts/ to get posts by array with post-hashes. See comment there.
+			add method GetPosts to getlist with specified posts.
+			add comment for modified api command /api/prange to get last posts by range, or get hashes only by range. See comment there.
+			add comment for modified api command /api/png-create. There is possible to pack specified posts by send array with hashes there.
+				Also, can be sent custom PNG dataURL and something else. See source code.
+			add api command /api/run-nbpack to run nbpack.cs "Simple tool", after sent parameters in POST-query. See source code and description there.
+			add GET or POST parameters to /api/png-collect see comment there.
+			add api command /api/convert-to-PNG - see comment there.
+			add text response for avail functions (collect and create)...
+			add method generate_PNG /api/convert-to-PNG/?generate_PNG,PNG_WIDTH,PNG_HEIGHT - random bitmap or fractalgen.
+	-	ErrorHandler.cs
+			Just change version to nanoboard 3.2
+	-	GetCaptchaTokenHandler.cs
+			Set bool variable and return error if captcha not found. This error with customized link is showing as captcha, in this case.
+	-	HttpServerBuilder.cs
+			Just replace int.Parse to nbpack.NBPackMain.parse_number
+	-	NotificationHandler.cs
+			Just add Thread.Sleep(10);
+	-	TcpServer.cs
+			Just replace int.Parse to nbpack.NBPackMain.parse_number
+			Also, add exception to catch in the end.
+__________________________________________________________________________________________________________________________________________________________________
+(25.03.2019)	commit 4ae415277b72acd321284074dffa43e1530299c7		16 files changed with 293 additions and 20 deletions.
+
+Changes in nanoboard 3.2
+Short changes:
+	-	change style small fix.
+	- 	add show-hide post by click on eye. Like on 2ch.hk.
+		Two strings from makaba.css used in the tag <style> in index.html.
+		Functions added in nanoclient.js and can be founded by keyword "post_type_hidden".
+		Post hash saved in LocalStorage.
+
+	-	add separate tab to create PNG.
+	-	add queue there. Now you can pack specified or selected posts and customize randomizing packing.
+	-	Add queue button for each post. Now by click to this button any post can be added and removed from queue.
+	-	Add page to unpack custom container. 	Now this located by http://127.0.0.1:7346/pages/Open_container.html
+	-	Add page to convert images to PNG.		Now this located here: http://127.0.0.1:7346/pages/convert-to-PNG.html
+	-	Add PNG generator. Bitmap or FractalGen. DataURL sent by GET or POST-query (for big images).
+		See method generate_PNG in /Server/DbApiHandler.cs
+	-	Add more GET and POST-parameters for api-methods there. 
+	-	Update post count /count - now only when collect.
+	-	Update places not by interval, now. There is separate link to update this by click.
+	-	notif - update by long interval, but when notif, this swithed to short interval. See scripts/params.js
+	-	Add check sha256 hash of the file captcha.nbc. This is checking once after try to load captcha. So no need captcha.nbc for readonly mode.
+		URL for downloading capcha is not hardcoded, and can be changed to custom URL - in config-3.json.
+	-	Add static captcha hash to config-3.json and this value is hardcoded in the code. See nanoboard-source/Captcha/Captcha.cs
+	-	Captcha not downloaded if fail, because:
+		1. Github using regirect.
+		2. This is not anonymous action.
+		Need to add proxy, so code to downloading captcha was been commented.
+	-	Proxy! This was been added to collectPNG.
+		See AddProxy method in /PngTransport/DbApiHandler.cs
+		/proxy.txt - list of proxies + comment.
+		When collect, each proxy from this list try to ping, then first successfully proxy using as default, and pictures is downloading using this proxy.
+	-	Change post validation to bypassValidation, when captcha.nbc not found. No error now.
+	-	Add all changes from nanoboard 3.1. See thread http://127.0.0.1:7346/pages/index.html#thread70ca25ba04a241d3b3729611205bf4bb
+		All changes from [3.1 version](https://github.com/username1565/nanoboard/commit/e828b228af6d2a1cc507ff80a59c25a0f5a511f0)
+		According the comment https://github.com/username1565/nanoboard/issues/3#issuecomment-463904141 from issue https://github.com/username1565/nanoboard/issues/3
+		3 level for replyes, when thread loaded from main page.
+		Sorting last posts by date.
+		Bump for threads.
+		Add comparer to make avaiable to compile version 3.1 in .NET Framework 3.5. See post 082a06592e3b241e3c49063524a3ac25
+
+	Full changes:
+				\Changes.txt			this file - changed. This info added.
+				\pages\index.html		Just change version to 3.1
+				\pages\version.txt		Just change version to 3.1
+				\scripts\nanoclient.js	add function AddBriefView from 3.1
+				\scripts\reply.js		Just change version to 3.1
+				
+				\nanodb.exe-source\nanodb.csproj
+				\nanodb.exe-source\nanodb.sln
+				\nanodb.exe-source\Program.cs
+						copy this 3 files from 3.1 client with changes.
+				\nanodb.exe-source\app.config
+				\nanodb.exe-source\nanodb.csproj.user
+						Add this two files files.
+				\nanodb.exe-source\compile.bat				- add this file to compile nanodb.exe from the source code, using MSBuild.exe
+
+				\nanodb.exe-source\Database\Post.cs			- add changes from 3.1 client.
+				\nanodb.exe-source\Database\PostDb.cs		- add changes from 3.1 client + define comparer: "DTComparer : IComparer"
+				\nanodb.exe-source\PngTransport\NBPack.cs	- add two strings from 3.1 client, in the end, after Validate(posts);
+				\nanodb.exe-source\Server\DbApiHandler.cs	- add API command "/api/getlastn" + method GetLastNPosts from 3.1 client.
+				\nanodb.exe-source\Server\ErrorHandler.cs	- just change version.
+				
+			Total changes 16 files: 13 files changed + 3 files added: app.config, nanodb.csproj.user + compile.bat.
+			Compiled win32 (x86) exe - in zip-archive, in Releases.
+__________________________________________________________________________________________________________________________________________________________________
+(21.02.2019) commit f556b657d03798a9db3cdad50292595013117419	1 files changed with 166 additions and 155 deletions.
+	/scripts/sha256.js
+		Update sha256.js again
+__________________________________________________________________________________________________________________________________________________________________
+(21.02.2019) commit 2a22639e0d83d2a8b8deb395f0d0e6fce1c945cb	1 files changed with 166 additions and 155 deletions.
+	/scripts/sha256.js
+		Delete sha-256.js
+__________________________________________________________________________________________________________________________________________________________________
+(21.02.2019) commit be65c0acef20c312c6f86593913fbbb1739124f1	1 files changed with 169 additions and 0 deletions.
+	/scripts/sha256.js
+		Update sha256.js from https://gist.githubusercontent.com/rumkin/fa728e5a6b28625f53db/raw/80edf3a8baf71a2934d097c9c46135e4512eac51/sha-256.js
+		gist here:		https://gist.githubusercontent.com/rumkin/fa728e5a6b28625f53db/
+		backup here: 	https://gist.github.com/username1565/a985303dce41b42349389cfbe7f3d453
+__________________________________________________________________________________________________________________________________________________________________
+(21.02.2019) commit 77ac0577a036e5687b7451061a2e81cfc6903a35	1 files changed with 158 additions and 0 deletions.
+	/scripts/sha256.js
+		Upload original sha256.js, from nanoboard-restore, before mofidication of this.
+		This file is broken, so I'll update this, in next commits.
+__________________________________________________________________________________________________________________________________________________________________
+(20.02.2019) commit 7b76e55f49f48b8434b677a5693c08cc65728668	1 files changed with 154 additions and 0 deletions.
+	/pages/index.html
+		Upload original index.html before modification.
+__________________________________________________________________________________________________________________________________________________________________
+(19.02.2019) commit 375f71898c34dc5ee4172968b20606e3049cbe7e	2 files changed with 238 additions and 0 deletions.
+	/scripts/init.js
+	/scripts/last.js
+		Upload original scripts from restore-archive, before modification to compare changes.
+__________________________________________________________________________________________________________________________________________________________________
+(14.02.2019) commit 451b4c6f04be9d5ea7adfb8e9b265584a3c8a8a4	6 files changed with 280 additions and 10 deletions.
+
+Changed files:
+	- nanoclient.js	Replace all posts hashes to local links. Now all 32 bytes hexes, which founded in post, will be replaced to local links.
+	- post.js		If there is the link (not hash), then this link contains the partial of next local link, but not text.
+	- params.html	Just make text for title tooltips multistringify, to be more readable.
+	- params.js		Change var _post_count_notification_time = 16000; Now XHR-queries not so often.
+	- reply.js		Check base64 without throw error, for all bb-codes where this using: [img, xmg, file]. This need to prevent sending the nanopost with NOT_BASE64.
+//test text for textarea:
+[xmg=123][xmg=4567][xmg=891][img=011][img=1213][img=141][file]516[/file][file]1718[/file][file]192[/file]
+//4 digits interpretting as base64
+	- version.txt	Update version.txt.
+
+	You can see merged files, and comment all this code, if you see any bugs.
+__________________________________________________________________________________________________________________________________________________________________
+(14.02.2019) commit 53c386c278d5d0d697201a5ea3af360af5d616b9	3 files changed with 709 additions and 0 deletions.
+	/scripts/params.js
+	/scripts/post.js
+	/scripts/reply.js
+		Upload original scripts
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 5ee0f9b6735cd73a7ca898ac8885c21735517b8f	1 files changed with 11 additions and 5 deletions.
+	/README.md
+		Finally fix this README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 7a9a321dbb6704005d3e69a4cb1e5cc19805ebab	1 files changed with 12 additions and 5 deletions.
+	/README.md
+		small fix README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 6ba69ed971aa15d8f28dfd32068f97c5387684e0	1 files changed with 12 additions and 5 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 33a03fa69eeb8f5ddc42f80fac189bc6a9ffe28e	1 files changed with 2 additions and 4 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit f78c9248e2d5aa87149c7deb4f18cab6977041b5	1 files changed with 0 additions and 0 deletions.
+	/nanodb.exe
+		Remove nanodb.exe
+			Latest exe, in zip - here: https://github.com/username1565/nanoboard/tree/win32
+			(means here, in releases: https://github.com/username1565/nanoboard/releases/tag/win32 )
+			because	the latest commit, by that tag is a323a10d29a2219a212d9814f868999fcbd3039b,
+			and the same release corresponding that commit.
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 9a6c9bcf51f7a7c8fe694e296423e66f9e4920cc	1 files changed with 10 additions and 9 deletions.
+	/README.md
+		Fix paragraphs in README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 30c9a74a00ac7ce30b0d2916c74b8489963068f4	1 files changed with 55 additions and 7 deletions.
+	/README.md
+		Now README.md more readable.
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 537208d23824c666152abac25a7534f76dba85c1	1 files changed with 33 additions and 14 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 5d2e3c19a97105a9527d94a9da2c03f5cd0e2c8a	1 files changed with 17 additions and 12 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 8ce0be6a933719c3205b47afb1fe47957894c592	1 files changed with 6 additions and 1 deletion.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(13.02.2019) commit 2b2058450d61930f3288454ca443bc8f96f5e8f0	1 files changed with 39 additions and 6 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(6.02.2019)	commit 9e48062c4a7c53d6c871f375b50a2be58b053441		3 files changed with 43 additions and 1 deletion.
+1. Add scripts and page - in one archive.
+2. Change checkver.js, and there is working link to download this archive - added.
+3. Update releases.
+	/Changes.txt
+	/nanodb.exe
+	/scripts/checkver.js
+__________________________________________________________________________________________________________________________________________________________________
+(6.02.2019)	commit be412b22f985d6a752710fef3b08074b577b8a64		2 files changed with 20 additions and 3 deletions.
+	/nanodb.exe-source/Server/DbApiHandler.cs
+		-	At line 131: the function was been added parse_number(string string_number), because int.Parse and Int32.Parse not working correctly for me.
+		-	At line 150-151: replaced using this. Now last 50 and las 500 messages working good.
+	/pages/version.txt - regenerated, after recompilation nanodb.exe
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit 5574fd0c3215014df6a0f02f16eed590a6e28b9f		2 files changed with 3 additions and 2 deletions.
+	/pages/version.txt
+	/scripts/checkver.js
+	Update version
+		1. Update date in /pages/version.txt
+		2. Add working link to version.txt in /scripts/checkver.js
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit f725a7615010669de3be4925596719f6e8ae3091		1 files changed with 0 additions and 0 deletions.
+	Rename version.txt to pages/version.txt
+		Move version.txt to /pages/version.txt
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit 3476e5c98802198bfa5d07ea9a43feb40dbee33c		6 files changed with 133 additions and 3 deletions.
+	/nanodb.exe-source/PngTransport/Aggregator.cs
+		-	Add re-calculating the picture_host for each imageAddress, because many png's from dobrochan
+			was been blocked, after downloading PNG from iplogger.org - blocked...
+	/pages/generate_date_for_version.html
+	/pages/params.html
+	/scripts/checkver.js
+	/scripts/nanoclient.js
+	/version.txt
+
+Changes
+	/nanodb.exe-source/PngTransport/Aggregator.cs
+		at line 298:
+			Add re-calculating the picture_host for each imageAddress,
+			because many png's from dobrochan was been blocked,
+			after downloading PNG from iplogger.org - blocked...
+
+	/pages/params.html
+		at line 126: 	Add title tooltips for textareas...
+		at line 170:		fix redirect, fater restarting, because values of IP and PORT was been undefined...
+
+	/pages/version.txt - add original version.txt with old date.
+
+	/pages/generate_date_for_version.html
+		Add new file - this is generator of the date as string, for version.txt.
+
+	/scripts/nanoclient.js
+		at line 307: 	Remove "&nbsp;". This adding whitespace every time on click by "Sort by Date".
+
+	/scripts/checkver.js - upload original file, without changes.
+		at line 5:		Checking version online from old link.
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit 14cb2463ebe42da1b6f320a8e39c7c37dcd2a2cc		1 files changed with 84 additions and 1 deletion.
+	/pages/generate_HTTP(S)_links.html
+		Add <!DOCTYPE html>
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit ec87d753c02224e2a44473e5ae9500db79e84b9c		1 files changed with 1 addition and 1 deletion.
+	/pages/generate_HTTP(S)_links.html
+		Change encoding to UTF-8 and add tags
+__________________________________________________________________________________________________________________________________________________________________
+(3.02.2019)	commit 4e38addec0fba3bed716a4d8f796cb5e9de88970		3 files changed with 226 additions and 2 deletions.
+	/nanodb.exe-source/PngTransport/Aggregator.cs
+	/pages/generate_HTTP(S)_links.html
+	/pages/params.html
+	Changes
+		Add "pages/generate_HTTP(S)_links.html" - generator of HTTP and HTTPS link from unique sorted threads...
+		Add link to "pages/params.html". Now this available in "Settings"
+		Aggregator.cs - add description and second condition as operand for prevent IP-logging,
+		but load pictures from "8ch.net (board)" -> "media.8ch.net (images)". See lines 315-319.
+__________________________________________________________________________________________________________________________________________________________________
+(2.02.2019)	commit b63dca185e5411a004349b1eef5fb9a4b9f31643		1 files changed with 37 additions and 20 deletions.
+	/scripts/nanoclient.js
+		Update nanoclient.js
+
+Changes and additions:
+
+Line 108: 		Add description for first post_content value. (Commented).
+Line 111: 		Add "not_a_files" to skip CONTENT, after splitting by '[file', for [file]CONTENT[/file], where CONTENT not a base64.
+Line 114: 		Add description for displaying array, after split. (Commented).
+Line 116-118: 	Add array length when displaying current element. (Commented).
+Line 120: 		Now maybe_base variable can be extracted after splitting by ']' if splitting by '"]' failed.
+				For example, the string [file]BASE64[/file] don't have filename and filetype, and cann't be splitted by '"]'
+Line 124:		In the end this value splitted by '[/file' now, not by '[/file]', because previous splitting possible by ']'.
+Line 126:		Add i value. (Commented)
+Line 130:		Show partial trimmed maybe_base64 in console. Not full value. (Commented).
+Line 132:		Leave old code.
+Line 133:		Split by base64 only for bb-codes, not for already replaced HTML-links. If one file repeating double, for example...
+Line 136:		Now, if this element undefined - break from cycle.
+Line 137:		Change old Regular Expression to validate filename, by adding there the cyrillic characters.
+Line 138-139:	Some tests for regexp. (Commented).
+Line 141:		Now var part !== i == not_a_files+1;
+Line 162:		Delete exception for post 946d50e33c413a93d7c963424e0846d9, where was been the code with [file][/file] (Commented.)
+Line 173-180:	Remove TAB-symbols from multistring code of base64 encoded PNG of green button to download.
+Line 182:		Add text to display the stage. (Commented).
+Line 184:		Add text to display the stage and array after first splitting. (Commented).
+Line 191:		Increment value for variable not_a_files for elements [file]CONTENT[/file], where CONTENT not a base64.
+
+That's all.
+__________________________________________________________________________________________________________________________________________________________________
+(1.02.2019)	commit d6c976df21e8e94287198a04b8fb5bb7cc6dbec0		1 files with 4 additions and 14 deletions.
+	/scripts/nanoclient.js
+		Changes and additions
+			1. Line 117: Show i-value inside cycle for in console.log.
+			2. Line 118: Now maybe_base is trimmed, before checking is this base64.
+				Base64 between [file][/file] can contains the trimmed symbols, now.
+			3. Line 128: Now, var part != 1 = i;
+			4. Line 145: remove code with exception for post 946d50e33c413a93d7c963424e0846d9, where is code contains "[file"
+
+			Now [file name="filename" type="filetype"]CONTENT[/file] will be replaced to link, only if CONTENT.trim() is base64.
+__________________________________________________________________________________________________________________________________________________________________
+(1.02.2019)	commit 4325a23746685d8752b67fb686bd91053bf6b7a2		3 files with 170 additions and 5 deletions.
+	/pages/download_as_binary.html
+	/scripts/img2base64.js
+	/scripts/nanoclient.js
+	
+Changes and additions.
+	img2base64.js - changed.
+	1. Replace bb-code "xmg" to bb-code '[file name="filename.extension" type="mime-type"]BASE64-CONTENT[/file]'
+		Now any file can be uploaded, like on karasiq-nanoboard. Filename and mime-type extracting when file selected.
+		See lines 63, 76 and 122 in img2base64.js
+	2. Add some comments.
+
+	3. The page /pages/download_as_binary.html was been added - to download any base64 or dataURL, as binary file.
+
+		nanoclient.js - changed.
+	4. At line 1 was been added the function to check without throw error, is content - base64 encoded or not.
+	5. At line 106 was been added the cycle for extracting base64, filename and filetype
+		from '[file name="filename.extension" type="mime-type"]BASE64-CONTENT[/file]',
+		and replace this to link for downloading the file.
+	6. At line 172 was been added the link to download_as_binary.html with base64 encoded png icon.
+		This code can be commented if you don't see any sense with this.
+	7. Old code saved at line 193.
+	8. Add comment at line 206.
+		[xmg] - tags still supported and working, but not adding now.
+		See: Karasiq/nanoboard#5
+
+		If anyone cann't download any file, you can using download_as_binary.html
+		Just download this, put in 'pages', and open http://127.0.0.1:7346/pages/download_as_binary.html
+	_________________________
+	Have a nice day.
+__________________________________________________________________________________________________________________________________________________________________
+(1.02.2019)	commit 95fe9c4b9e8fc02d99a27ca03adeae1eed60f2fe		1 files changed with 0 additions and 0 deletion.
+	/scripts/create_folder.txt
+		Delete this file, that needed just to create  "/scripts"-folder.
+__________________________________________________________________________________________________________________________________________________________________
+(1.02.2019)	commit 1eaba439be071ba4a41389abee811e94e5159cba		2 files changed with 434 additions and 0 deletions.
+	/scripts/img2base64.js
+	/scripts/nanoclient.js
+		Uploading original scripts
+			This scripts was been uploaded from nanoboard-restore archive: https://github.com/nanoboard/nanoboard/releases
+__________________________________________________________________________________________________________________________________________________________________
+(1.02.2019)	commit 917b07b39231612022da0cfff2f3ccd6ebbe02fa		1 files changed with 3 additions and 0 deletions.
+	/scripts/create_folder.txt
+		Create folder for scripts, and add this file there, to create this folder.
+__________________________________________________________________________________________________________________________________________________________________
+(28.01.2019) commit a323a10d29a2219a212d9814f868999fcbd3039b	1 files changed with 17 additions and 0 deletions.
+	/README.md
+		Update README.md
+__________________________________________________________________________________________________________________________________________________________________
+(28.01.2019) commit 42a052063aa2fad9e13e120ee2480033b23ccd56	1 files changed with 17 additions and 0 deletions.
+	/README.md
+		Add RosinSmoke README.md:
+			https://github.com/nanoboard/nanoboard/pull/2/commits/1a0d72cb155f8bee0e59cd16feb4c6a24d101436
+__________________________________________________________________________________________________________________________________________________________________
+(28.01.2019) commit 7b85284829f9c4bcc67663a3bc2984e166989cfa	1 files changed with 105 additions and 9 deletions.
+	/nanodb.exe-source/PngTransport/Aggregator.cs
+Changes and additions
+
+1. Fix port and pathway if this relative on the host.
+2. Split host address by components to build picture address.
+3. Unblock another protocols and add commented function for ftp://.
+4. Block iploggers. Now PNG pictures loading only from specified host.
+5. Change m2-ch.ru to m2ch.hk.
+Leave old code commented. Add comments.	
+
+Changes:
+File .../nanoboard-restore/nanodb.exe-source/PngTransport/Aggregator.cs:
+	-	Add code to get the "host_and_folder" "protocol://(domain/IP):PORT/folder"
+		and get this from the thread links, like this: "https://0chan.ml/_frct/res/1.html?query=some_query&parameter=value"
+	
+	-	Get (domain/IP):PORT only (variable "host"), and protocol://(domain/IP):PORT/ without folder (variable "protocol_host_port") - too.
+		Now IP:port can be used for threads in "Settings". This will be parsed correctly, if path of PNG is relative, in the response from server.
+	
+	-	Do this once for each thread, not for each picture.
+	
+	-	Add regular expression to get picture_host from imageAddress(url in parsed "href") if this contains "http://" or "https://"
+	
+	-	Block downloading pictures using unknown protocol. For example, "ftp://domain.com/picture.png" in "href" - will be blocked.
+	
+	-	Change imageAddress by adding pictures relative path from href:
+		to "protocol_host_port" (if in href "/images/pic.png" or "./images/pic.png")
+		to "host_and_folder" (if in href "../images/pic.png" or "images/pic.png").
+	
+	-	Add IP-logging attempt prevention:
+		if imageAddress contains keyword "logger", or URL shotrers "bit.ly" and "goo.gl" - picture downloading blocked.
+		if picture host not thie host of the thread (hard prevention).
+		There is possible to comparing protocols+host, because IP-loggers can working on another protocols,
+		but if HTTPS board load images using HTTP, this prevention not good.
+	
+	-	Change m-2ch.ru to m2ch.hk.
+	
+	-	Add description and second condition as operand for prevent IP-logging, but load pictures from "8ch.net (board)" -> "media.8ch.net (images)".
+
+__________________________________________________________________________________________________________________________________________________________________
+(28.01.2019) commit e828b228af6d2a1cc507ff80a59c25a0f5a511f0	53 files changed with 4,486 additions and 0 deletions.
+
+Upload nanodb.exe-source from nanoboard-restore.zip
+
+nanodb.exe-source from https://github.com/nanoboard/nanoboard/releases/download/0/nanoboard-restore.zip
+nanoboard-restore\nanodb.exe-source
+Version: Client 3.0
+Language: C#
+
+Q: How to compile nanodb.exe?
+A:
+1. Win+R
+2. cmd, enter.
+3. disk:\Path_to_.NET_Framework\MSBuild.exe /property:Configuration=Release nanodb.csproj
+
+Q: Is nanodb.exe portable?
+A: No, this working with files from restore-archive.
+
+Added filed:
+	/nanodb.exe-source/Captcha/BitmapConvert.cs 
+	/nanodb.exe-source/Captcha/ByteStringExt.cs 
+	/nanodb.exe-source/Captcha/Captcha.cs 
+	/nanodb.exe-source/Captcha/PostSignatureExt.cs 
+	/nanodb.exe-source/Database/DbPostRef.cs 
+	/nanodb.exe-source/Database/FileUtil.cs 
+	/nanodb.exe-source/Database/GZipUtil.cs 
+	/nanodb.exe-source/Database/HashCalculator.cs 
+	/nanodb.exe-source/Database/Index.cs 
+	/nanodb.exe-source/Database/Post.cs 
+	/nanodb.exe-source/Database/PostDb.cs 
+	/nanodb.exe-source/Database/PostsReader.cs 
+	/nanodb.exe-source/Database/PostsValidator.cs 
+	/nanodb.exe-source/PngTransport/Aggregator.cs 
+	/nanodb.exe-source/PngTransport/ByteEncryptionUtil.cs 
+	/nanodb.exe-source/PngTransport/CurlWebClient.cs 
+	/nanodb.exe-source/PngTransport/GZipUtil.cs 
+	/nanodb.exe-source/PngTransport/HashCalculator.cs 
+	/nanodb.exe-source/PngTransport/NBPack.cs 
+	/nanodb.exe-source/PngTransport/NanoPost.cs 
+	/nanodb.exe-source/PngTransport/NanoPostPackUtil.cs 
+	/nanodb.exe-source/PngTransport/PngStegoUtil.cs 
+	/nanodb.exe-source/PngTransport/PngUtils.cs 
+	/nanodb.exe-source/PngTransport/Post.cs 
+	/nanodb.exe-source/PngTransport/Posts.cs 
+	/nanodb.exe-source/PngTransport/Salsa20.cs 
+	/nanodb.exe-source/PngTransport/WebClientX.cs 
+	/nanodb.exe-source/Program.cs 
+	/nanodb.exe-source/Server/ActionHandler.cs 
+	/nanodb.exe-source/Server/CaptchaTracker.cs 
+	/nanodb.exe-source/Server/Configurator.cs 
+	/nanodb.exe-source/Server/DbApiHandler.cs 
+	/nanodb.exe-source/Server/ErrorHandler.cs 
+	/nanodb.exe-source/Server/FileHandler.cs 
+	/nanodb.exe-source/Server/GetCaptchaImageHandler.cs 
+	/nanodb.exe-source/Server/GetCaptchaTokenHandler.cs 
+	/nanodb.exe-source/Server/HttpConnection.cs 
+	/nanodb.exe-source/Server/HttpRequest.cs 
+	/nanodb.exe-source/Server/HttpResponse.cs 
+	/nanodb.exe-source/Server/HttpServer.cs 
+	/nanodb.exe-source/Server/HttpServerBuilder.cs 
+	/nanodb.exe-source/Server/IRequestHandler.cs 
+	/nanodb.exe-source/Server/MimeType.cs 
+	/nanodb.exe-source/Server/NotificationHandler.cs 
+	/nanodb.exe-source/Server/SolveCaptchaAndAddPostHandler.cs 
+	/nanodb.exe-source/Server/StatusCode.cs 
+	/nanodb.exe-source/Server/StylesHandler.cs 
+	/nanodb.exe-source/Server/TcpServer.cs 
+	/nanodb.exe-source/bin/Debug/Chaos.NaCl.dll 
+	/nanodb.exe-source/bin/Debug/Newtonsoft.Json.dll 
+	/nanodb.exe-source/nanodb.csproj 
+	/nanodb.exe-source/nanodb.sln 
+	/nanodb.exe-source/nanodb.userprefs 
+
+__________________________________________________________________________________________________________________________________________________________________
+(16.12.2016) commit bcd022da3d16693212d8d49cdf54935893aeccfe	1 files changed with 1 addition and 1 deletion.
+	Update README.md (nanoboard account made this commit)
+		Start fork from this commit, from https://github.com/nanoboard/nanoboard to https://github.com/username1565/nanoboard
