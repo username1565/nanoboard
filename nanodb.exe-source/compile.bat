@@ -7,6 +7,43 @@ set msbuild=%fdir%\v4.0.30319\msbuild.exe
 
 :: Compilation:
 
+
+
+::	--- BEGIN Compile Chaos.NaCl.dll from the source code. ---
+:: (this need to working with captcha)
+
+:CheckChaosLibrary
+	::If not exists - compile
+	@IF NOT EXIST "bin\Debug\Chaos.NaCl.dll" goto :CompileChaosLibrary
+	::If old precompiled .dll exists, rename it, using "move"-command
+	@IF EXIST "bin\Debug\Chaos.NaCl.dll" IF NOT EXIST "bin\Debug\old_precompiled_Chaos.NaCl.dll" goto :MoveOldChaosLibrary
+	::If chaos already exists, do not compile it.
+	@IF EXIST "bin\Debug\Chaos.NaCl.dll" IF EXIST "bin\Debug\old_precompiled_Chaos.NaCl.dll" goto :SkipCompileChaosLibrary
+
+:MoveOldChaosLibrary
+	move "bin\Debug\Chaos.NaCl.dll" "bin\Debug\old_precompiled_Chaos.NaCl.dll"
+	goto :CheckChaosLibrary
+
+:CompileChaosLibrary
+	::	Compile it, if not exists:
+	::			Debug-version
+	%msbuild% /property:Configuration=Debug "Chaos.NaCl.dll\Chaos.NaCl-master\Chaos.NaCl\Chaos.NaCl.csproj"
+	::			Release
+	%msbuild% /property:Confguration=Release "Chaos.NaCl.dll\Chaos.NaCl-master\Chaos.NaCl\Chaos.NaCl.csproj"
+
+	::			Then copy "bin" using xcopy
+	xcopy "Chaos.NaCl.dll\Chaos.NaCl-master\Chaos.NaCl\bin" "bin" /E /H /C /I /Y
+	::			And copy "obj" using xcopy
+	xcopy "Chaos.NaCl.dll\Chaos.NaCl-master\Chaos.NaCl\obj" "obj" /E /H /C /I /Y
+	goto :CheckChaosLibrary
+
+:SkipCompileChaosLibrary
+	::do nothing
+::	--- End Compile Chaos.NaCl.dll from the source code. ---
+
+
+
+::	Now, run compilation of "nanodb.exe"
 ::Without adding pathway to path
 ::%msbuild% /p:Configuration=Release nanodb.csproj
 

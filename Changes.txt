@@ -7,6 +7,156 @@ This is available in releases, here is an only source code of this, not a compil
 
 BEGIN CHANGELOG:
 __________________________________________________________________________________________________________________________________________________________________
+(23.02.2021)	commit	unknown_hash	95 files changed with ? additions and ? deletions.
+95 files added, 2 files changed in 14 folders (13 folders added).
+
+	Add source code of Chaos.NaCl.dll v1.0.0.
+	Upload the source code of Chaos.NaCl.dll v1.0.0: from here: https://github.com/CodesInChaos/Chaos.NaCl/tree/2c861348dc45369508e718aa08611c53b53553db
+	( mirror here: https://github.com/username1565/Chaos.NaCl/releases/tag/1.0.0 )
+
+1.	Clone latest "Chaos.NaCl.dll", without replace LF to CRLF in the End Of Line for this files.
+	Source code: https://github.com/CodesInChaos/Chaos.NaCl , mirror - here: https://github.com/username1565/Chaos.NaCl
+		git config --global core.autocrlf
+			remember this value
+		git config --global core.autocrlf false
+		git clone https://github.com/CodesInChaos/Chaos.NaCl.git
+		git config --global core.autocrlf <previous value>,
+			or
+		git config --global --unset core.autocrlf
+			if this was been empty.
+
+			Then, use v1.0.0
+		git checkout 2c861348dc45369508e718aa08611c53b53553db
+
+2.	/nanodb.exe-source/Chaos.NaCl.dll/	- create this folder.
+
+3.	/nanodb.exe-source/Chaos.NaCl.dll/Chaos.NaCl.dll-master/	- create this folder too.
+
+4.	Update 	/nanodb.exe-source/compile.bat
+5.	Add		/nanodb.exe-source/Chaos.NaCl.dll/Compile_Chaos.NaCl.dll.bat
+
+6.	Upload the source code of Chaos.NaCl.dll
+		Because max files to upload is 100,
+Add files, from clonned folder, without hidden .git-folder,
+and without files ".editorconfig" and ".gitignore"
+
+Total files with source code, to upload - 94 files and 11 folders. Total 105 elements.
+
+	Folders:
+\Chaos.NaCl
+\Chaos.NaCl.Benchmark
+\Chaos.NaCl.Benchmark32
+\Chaos.NaCl.Tests
+\Chaos.NaCl\Internal
+\Chaos.NaCl\Properties
+\Chaos.NaCl.Benchmark\Properties
+\Chaos.NaCl.Benchmark32\Properties
+\Chaos.NaCl.Tests\Properties
+\Chaos.NaCl\Internal\Ed25519Ref10
+\Chaos.NaCl\Internal\Salsa
+
+	Files:
+\Chaos.NaCl.sln
+\License.txt
+\readme.md
+\Chaos.NaCl\Chaos.NaCl-Portable.csproj
+\Chaos.NaCl\Chaos.NaCl.csproj
+\Chaos.NaCl\CryptoBytes.cs
+\Chaos.NaCl\Ed25519.cs
+\Chaos.NaCl\MontgomeryCurve25519.cs
+\Chaos.NaCl\OneTimeAuth.cs
+\Chaos.NaCl\Poly1305.cs
+\Chaos.NaCl\Sha512.cs
+\Chaos.NaCl\XSalsa20Poly1305.cs
+\Chaos.NaCl.Benchmark\BenchmarkProgram.cs
+\Chaos.NaCl.Benchmark\Chaos.NaCl.Benchmark.csproj
+\Chaos.NaCl.Benchmark\Cpu.cs
+\Chaos.NaCl.Benchmark32\App.config
+\Chaos.NaCl.Benchmark32\Chaos.NaCl.Benchmark32.csproj
+\Chaos.NaCl.Benchmark32\Program.cs
+\Chaos.NaCl.Benchmark32\Properties\AssemblyInfo.cs
+\Chaos.NaCl.Benchmark\Properties\AssemblyInfo.cs
+\Chaos.NaCl.Tests\ArrayTests.cs
+\Chaos.NaCl.Tests\Chaos.NaCl.Tests.csproj
+\Chaos.NaCl.Tests\CryptoBytesTest.cs
+\Chaos.NaCl.Tests\Ed25519Tests.cs
+\Chaos.NaCl.Tests\Ed25519TestVectors.cs
+\Chaos.NaCl.Tests\InternalAssertTests.cs
+\Chaos.NaCl.Tests\MontgomeryCurve25519Tests.cs
+\Chaos.NaCl.Tests\MontgomeryCurve25519TestVectors.cs
+\Chaos.NaCl.Tests\Poly1305Tests.cs
+\Chaos.NaCl.Tests\SalsaCoreTests.cs
+\Chaos.NaCl.Tests\Sha512Tests.cs
+\Chaos.NaCl.Tests\TestHelpers.cs
+\Chaos.NaCl.Tests\XSalsa20Poly1305Tests.cs
+\Chaos.NaCl.Tests\Properties\AssemblyInfo.cs
+\Chaos.NaCl\Internal\Array16.cs
+\Chaos.NaCl\Internal\Array8.cs
+\Chaos.NaCl\Internal\ByteIntegerConverter.cs
+\Chaos.NaCl\Internal\InternalAssert.cs
+\Chaos.NaCl\Internal\Poly1305Donna.cs
+\Chaos.NaCl\Internal\Sha512Internal.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\base.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\base2.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\d.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\d2.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_0.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_1.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_add.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_cmov.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_cswap.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_frombytes.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_invert.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_isnegative.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_isnonzero.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_mul.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_mul121666.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_neg.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_pow22523.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_sq.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_sq2.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_sub.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\fe_tobytes.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\FieldElement.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_add.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_double_scalarmult.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_frombytes.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_madd.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_msub.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p1p1_to_p2.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p1p1_to_p3.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p2_0.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p2_dbl.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p3_0.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p3_dbl.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p3_to_cached.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p3_to_p2.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_p3_tobytes.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_precomp_0.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_scalarmult_base.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_sub.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\ge_tobytes.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\GroupElement.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\keypair.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\open.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\sc_clamp.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\sc_mul_add.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\sc_reduce.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\scalarmult.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\sign.cs
+\Chaos.NaCl\Internal\Ed25519Ref10\sqrtm1.cs
+\Chaos.NaCl\Internal\Salsa\replace regex.txt
+\Chaos.NaCl\Internal\Salsa\Salsa20.cs
+\Chaos.NaCl\Internal\Salsa\SalsaCore.cs
+\Chaos.NaCl\Properties\AssemblyInfo.cs
+\Chaos.NaCl\Properties\AssemblyInfoFull.cs
+
+7.	+1 files added (/nanodb.exe-source/Chaos.NaCl.dll/Compile_Chaos.NaCl.dll.bat), and 2 files updated ( /Changes.txt, /nanodb.exe-source/compile.bat )
+with 2 folders ( /nanodb.exe-source/ , /nanodb.exe-source/Chaos.NaCl.dll/ and /nanodb.exe-source/Chaos.NaCl.dll/Chaos.NaCl.dll-master/ )
+
+Summary elements to upload is 97 files and 14 folders. Total 111 elements. 95 files added, 2 files changed in 14 folders (13 folders added).
+
+__________________________________________________________________________________________________________________________________________________________________
 (23.02.2021)	commit	unknown_hash	17 files changed with ? additions and ? deletions.
 17 files is different. Changed 15 files, added 2 files, 0 files was been deleted - in 5 folders.
 
