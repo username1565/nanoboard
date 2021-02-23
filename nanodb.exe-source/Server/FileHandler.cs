@@ -632,7 +632,13 @@ namespace NServer
                     string redirect = "<meta http-equiv='refresh' content='0; url=/pages/index.html' />";
                     return new HttpResponse(StatusCode.Ok, redirect + "<a href='/pages/index.html'>[Enter]</a>", _mime);
                 }
-                else if (request.Address == "/download" || request.Address == "/download/" || request.Address=="/download/?all_files") 
+                else if (
+						request.Address == "/download"
+					||	request.Address == "/download/"
+					||	request.Address.Contains("/download/?all_files")	/*sometimes, request.Address can be "?all_files=",	with "="-symbol in the end...*/
+					||	request.Address.Contains("/download/?zip_only")		/*sometimes, request.Address can be "?zip_only=",	with "="-symbol in the end...*/
+					||	request.Address.Contains("/download")				/*sometimes, request.Address can be "?zip_only=",	with "="-symbol in the end...*/
+				)
                 {
 					var ext = new List<string> {/*".jpg", ".gif",*/ ".png"};
 					string [] files =
@@ -644,7 +650,19 @@ namespace NServer
 					string filelist = "";
 					string link = "";
 					for(int i=0; i<files.Length; i++){
-						if( ( files[i].EndsWith(".png", StringComparison.OrdinalIgnoreCase) && (!files[i].StartsWith("download\\created")) && (!files[i].StartsWith("download\\generated")) ) || request.Address=="/download/?all_files" ){
+						if(
+							(
+									files[i].EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+								&& 	(!files[i].StartsWith("download\\created"))
+								&&	(!files[i].StartsWith("download\\generated"))
+								&&	(!request.Address.Contains("/download/?zip_only"))
+							)
+							||	request.Address.Contains("/download/?all_files")
+							||	(
+										request.Address.Contains("/download/?zip_only")
+									&&	files[i].EndsWith(".zip", StringComparison.OrdinalIgnoreCase)
+								)
+						){
 							link =	((request.Address=="/download")?"download/":"")+files[i].Replace("download\\", "").Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 							filelist += "<a href=\""+link+"\" target=\"_blank\">"+link+"</a><br>";
 						}
@@ -657,6 +675,7 @@ namespace NServer
 												+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/download/?all_files\" title=\"Show all files in 'download'-folder, independent of their types, and extensions.\">[ Show all files ]</a>"
 												+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/download/\" title=\"Show PNG-files only, to 'Collect PNG' (default mode, for 'download'-folder).\">[ PNG only ]</a>"
 												+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/captcha.nbc\" title=\"Download 'captcha.nbc' - captcha-pack file.\">[ Download captcha.nbc ]</a>"
+												+"&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/download/?zip_only\" title=\"Download source code in zip-archives.\">[ source code + updates ]</a>"
 												+"<br>"
 												+"<h1 title=\"This page can be parsed as thread on the "
 												+"imageboard by URL. "

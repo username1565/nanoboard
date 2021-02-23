@@ -102,12 +102,31 @@ namespace NDB
             /*
                 Hardcoded root post, categories post and example category post - adding them to DB below
             */
-            var initialPostsStr = @"[{'hash':'bdd4b5fc1b3a933367bc6830fef72a35','message':'W2Jd0JrQkNCi0JXQk9Ce0KDQmNCYWy9iXQrQp9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINC90L7QstGD0Y4g0LrQsNGC0LXQs9C+0YDQuNGOLCDQvtGC0LLQtdGC0YzRgtC1INC90LAg0Y3RgtC+INGB0L7QvtCx0YnQtdC90LjQtS4K0J7RgtCy0LXRgtGM0YLQtSDQvdCwINC+0LTQvdGDINC40Lcg0LrQsNGC0LXQs9C+0YDQuNC5LCDRh9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINGC0LDQvCDRgtGA0LXQtC4=','replyTo':'f682830a470200d738d32c69e6c2b8a4'},{'hash':'cd94a3d60f2f521806abebcd3dc3f549','message':'W2Jd0JHRgNC10LQv0KDQsNC30L3QvtC1Wy9iXQ==','replyTo':'bdd4b5fc1b3a933367bc6830fef72a35'},{'hash':'cd94a3d60f2f521806abebcd3dc3f549','message':'W2Jd0JHRgNC10LQv0KDQsNC30L3QvtC1Wy9iXQ==','replyTo':'bdd4b5fc1b3a933367bc6830fef72a35'},{'hash':'bdd4b5fc1b3a933367bc6830fef72a35','message':'W2Jd0JrQkNCi0JXQk9Ce0KDQmNCYWy9iXQrQp9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINC90L7QstGD0Y4g0LrQsNGC0LXQs9C+0YDQuNGOLCDQvtGC0LLQtdGC0YzRgtC1INC90LAg0Y3RgtC+INGB0L7QvtCx0YnQtdC90LjQtS4K0J7RgtCy0LXRgtGM0YLQtSDQvdCwINC+0LTQvdGDINC40Lcg0LrQsNGC0LXQs9C+0YDQuNC5LCDRh9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINGC0LDQvCDRgtGA0LXQtC4=','replyTo':'f682830a470200d738d32c69e6c2b8a4'},{'hash':'f682830a470200d738d32c69e6c2b8a4','message':'e1dlbGNvbWUgdG8gTmFub2JvYXJkfQ==','replyTo':'00000000000000000000000000000000'}]";
+//            var initialPostsStr = @"[{'hash':'bdd4b5fc1b3a933367bc6830fef72a35','message':'W2Jd0JrQkNCi0JXQk9Ce0KDQmNCYWy9iXQrQp9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINC90L7QstGD0Y4g0LrQsNGC0LXQs9C+0YDQuNGOLCDQvtGC0LLQtdGC0YzRgtC1INC90LAg0Y3RgtC+INGB0L7QvtCx0YnQtdC90LjQtS4K0J7RgtCy0LXRgtGM0YLQtSDQvdCwINC+0LTQvdGDINC40Lcg0LrQsNGC0LXQs9C+0YDQuNC5LCDRh9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINGC0LDQvCDRgtGA0LXQtC4=','replyTo':'f682830a470200d738d32c69e6c2b8a4'},{'hash':'cd94a3d60f2f521806abebcd3dc3f549','message':'W2Jd0JHRgNC10LQv0KDQsNC30L3QvtC1Wy9iXQ==','replyTo':'bdd4b5fc1b3a933367bc6830fef72a35'},{'hash':'cd94a3d60f2f521806abebcd3dc3f549','message':'W2Jd0JHRgNC10LQv0KDQsNC30L3QvtC1Wy9iXQ==','replyTo':'bdd4b5fc1b3a933367bc6830fef72a35'},{'hash':'bdd4b5fc1b3a933367bc6830fef72a35','message':'W2Jd0JrQkNCi0JXQk9Ce0KDQmNCYWy9iXQrQp9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINC90L7QstGD0Y4g0LrQsNGC0LXQs9C+0YDQuNGOLCDQvtGC0LLQtdGC0YzRgtC1INC90LAg0Y3RgtC+INGB0L7QvtCx0YnQtdC90LjQtS4K0J7RgtCy0LXRgtGM0YLQtSDQvdCwINC+0LTQvdGDINC40Lcg0LrQsNGC0LXQs9C+0YDQuNC5LCDRh9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINGC0LDQvCDRgtGA0LXQtC4=','replyTo':'f682830a470200d738d32c69e6c2b8a4'},{'hash':'f682830a470200d738d32c69e6c2b8a4','message':'e1dlbGNvbWUgdG8gTmFub2JvYXJkfQ==','replyTo':'00000000000000000000000000000000'}]";
+            var @initialPostsStr = (
+					"["	//begin the array with default posts
+						//{Welcome to Nanoboard}
+						+"{'hash':'f682830a470200d738d32c69e6c2b8a4','message':'e1dlbGNvbWUgdG8gTmFub2JvYXJkfQ==','replyTo':'00000000000000000000000000000000'},"
+
+						//[b]КАТЕГОРИИ[/b]
+						//Чтобы создать новую категорию, ответьте на это сообщение.
+						//Ответьте на одну из категорий, чтобы создать там тред.
+						+"{'hash':'bdd4b5fc1b3a933367bc6830fef72a35','message':'W2Jd0JrQkNCi0JXQk9Ce0KDQmNCYWy9iXQrQp9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINC90L7QstGD0Y4g0LrQsNGC0LXQs9C+0YDQuNGOLCDQvtGC0LLQtdGC0YzRgtC1INC90LAg0Y3RgtC+INGB0L7QvtCx0YnQtdC90LjQtS4K0J7RgtCy0LXRgtGM0YLQtSDQvdCwINC+0LTQvdGDINC40Lcg0LrQsNGC0LXQs9C+0YDQuNC5LCDRh9GC0L7QsdGLINGB0L7Qt9C00LDRgtGMINGC0LDQvCDRgtGA0LXQtC4=','replyTo':'f682830a470200d738d32c69e6c2b8a4'},"
+
+						//[b]Бред/Разное[/b]
+						+"{'hash':'cd94a3d60f2f521806abebcd3dc3f549','message':'W2Jd0JHRgNC10LQv0KDQsNC30L3QvtC1Wy9iXQ==','replyTo':'bdd4b5fc1b3a933367bc6830fef72a35'},"
+					+"]"					//end array of default posts
+				)
+			;
             var initialPosts = JsonConvert.DeserializeObject<Post[]>(initialPostsStr);
 
             foreach (var p in initialPosts)
             {
-                PutPost(p, allowReput, true);	//PotPost without allowReput for default posts.
+//				Console.WriteLine("PostDb.cs: add initiail post p: "+p.hash);
+
+				//	PutPost for default posts, with allowReput = true and bypassValidation = true
+				//	(because this posts don't have POW and SIGN tag, and this post was been hardcoded).
+                PutPost(p, true, true);
             }
         }
 
@@ -417,10 +436,12 @@ namespace NDB
 						if(r.length == bytes.Length){						//if data.length is equals with post-byteLength - try to compare post-message.
 							var post_in_database = GetPost(p.hash);				//get post
 							if(post_in_database.message == p.message){				//if message base64 of post is equals of base64 post-message
+//								Console.WriteLine("PostDb.cs: ReputPost. No need to reput post, and this already exists.");
 								return false;											//don't add existing post, including "deleted_once" posts, and return false.
 							}
 							else{												//else
 								FileUtil.Write(r.file, bytes, r.offset);			//rewrite post-data from bytes in r.offset, if post-data was been damaged in database.
+//								Console.WriteLine("PostDb.cs: ReputPost. Post sucessfully rewrited in DataBase.");
 								return true;
 							}
 						}

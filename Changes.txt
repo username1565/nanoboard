@@ -7,9 +7,98 @@ This is available in releases, here is an only source code of this, not a compil
 
 BEGIN CHANGELOG:
 __________________________________________________________________________________________________________________________________________________________________
-(22.02.2021)	commit	unknown_hash	1 files changed ? addition and ? deletion.
+(23.02.2021)	commit	unknown_hash	17 files changed with ? additions and ? deletions.
+17 files is different. Changed 15 files, added 2 files, 0 files was been deleted - in 5 folders.
+
+Short changes:
+	Change "Main_" to "Main" for NBPack.cs and fractalgen.cs, to allow to compile and run this as separate applications.
+	Now, this is possible, by running "nanodb.exe NBPack -args" or "nanodb.exe FractalGen -args", or compile this, as standalone exe.
+	Small fixes.
+
+Full changes:
+
+\Captcha\ByteStringExt.cs
+	Line 92:	Add commented Console.WriteLine, to show POW-hash, just for test.
+
+\Captcha\Captcha.cs
+	Line	34			:	Small fix in comment. Add info, about possibility to using the chain of hashes, there.
+	Lines	37	-	39	:	Add comment about captcha-pack-file structure, and about ability to change "dummyMessage".
+	Line	46			:	Add comment about POW
+	Line	48			:	Small fix. Change DataUriPngPrefix to DataUriPngPrefix
+	Lines	199	-	205	:	Change "verify_captcha_hash"-method. Try to get values from config, and catch, in the case of fail, and config-3.json - does not exists, or damaged.
+	Lines	237	-	245	:	Change "Captcha"-method. Try to get captcha filename from config, else catch in the case of fail and config-3.json - does not exists, or damaged.
+	Lines	272	-	292	:	Generate captcha-image in memory, without save file on disk, and delete this.
+	Lines	368	-	378	:	Change "CaptchaIndex". Return 0, if max = 0, and captcha not found. Add comment. Add two commented Console.WriteLine, to show values for test.
+	Line	396			:	Add commented Console.WriteLine, to show result.
+
+\Database\PostDb.cs
+	Lines	105	-	120	:	Add comments to add the start default posts.
+	Lines	125	-	129	:	Add comments to add the start default posts, and allowReput for this.
+	Lines	439			:	Add commented Console.WriteLine.
+	Lines	444			:	Add commented Console.WriteLine.
+
+\Database\PostsValidator.cs
+	Line	64			:	Check pow only when bypassValidation false.
+	
+\PngTransport\ByteEncryptionUtil.cs
+	Line	47			:	Add comment about posibility to use chains of hashes, there.
+
+\PngTransport\fractalgen.cs
+	Lines	11	-	26	:	Add parse_number, in fractalgen.
+	Lines	28	-	30	:	Add string Result_Main. Rename "string Main_" to "void Main". Comment "string Main".
+	Line	82			:	Use parse_number instead of "nbpack.NBPackMain.parse_number".
+	Line	96			:	Use parse_number instead of "nbpack.NBPackMain.parse_number".
+	Lines	115	-	123	:	Write result in Result_Main, and add "string Main_" to return this string.
+	Now this can working as "void Main" to generate without return result, or as "string Main_", and return string result, then.
+
+\PngTransport\NBPack.cs
+	Line	18			:	Use null for "PostDatabase", on start.
+	Line	20			:	Change "Main_" to "Main".
+	Line	51			:	Add Console.ReadKey(); to do not close console-window with help-usage.
+	Line	143			:	Add commented Console.WriteLine in "ByteCountUnder". Just for test.
+	
+\Server\Configurator.cs
+	Lines	31	-	39	:	Try to read config, and catch if this was been damaged.
+	Line	76			:	Update skin if value not empty, and when target skin is specified.
+
+\Server\DbApiHandler.cs
+	Line	242			:	Change "Main_" to "Main".
+	Line	275			:	Change "Main_" to "Main".
+	Line	301			:	Change "Main_" to "Main".
+	Lines	707	-	708	:	Add commented Console.WriteLine.
+
+\Server\FileHandler.cs
+	Lines	635	-	641	:	Add cases to recognize request on "download"-folder.
+	Lines	653	-	665	:	Add cases to generate links for PNG.
+	Line	678			:	"?zip_only".
+
+\Server\HttpServer.cs
+	Line	12			:	Add "using System.Text.RegularExpressions;"
+	Line	23			:	Add regexp to check host.
+	Lines	82			:	Add commented dictionary
+	Lines	85			:	Use checkhost.
+	Line	139			:	Use checkhost, on try to shutdown, to prevent shutdown from lite-server.
+
+\Server\TcpServer.cs
+	Line	637			:	Small fix, 1 char.	
+
+\compile.bat
+	Lines	17	-	54	:	Add different cases to compile NBPack, FractalGen, or nanodb.exe. Add code to copy dll-libraries, near ".exe"
+
+\Program.cs
+	Lines	63	-	67	:	Add NBPack, as command-line argument. Now is possible to run nbpack, as "nanodb.exe NBPack -nbpack_args"
+	Lines	68	-	72	:	Add FractalGen, as comment-line argument. Now is possible to run FractalGen, as "nanodb.exe FractalGen -fractalgen_args"
+
+\Changes.txt
+	Lines	2026 -	2115:	Update this file - add changes.
+
+\PngTransport\Compile_FractalGen.bat
+\PngTransport\Compile_NBPack.bat
+	Add this two files, to compile FractalGen, and NBPack.
+__________________________________________________________________________________________________________________________________________________________________
+(23.02.2021)	commit	4f600563feb339488baa71fdcd7c343beb4ca7d9	1 files changed with 2,226 additions and 1,789 deletions.
 	./Changes.txt
-		Rewrite this file with changelog.
+		Rewrite this file "Changes.txt", with changelog.
 		Now latest changes are available in top of this txt-file, not in he bottom,
 		because over 2k lines here.
 __________________________________________________________________________________________________________________________________________________________________

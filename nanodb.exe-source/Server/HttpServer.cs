@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.Net;
 using Newtonsoft.Json;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 namespace NServer
 {
     class HttpServer
@@ -20,7 +20,7 @@ namespace NServer
         private readonly 	Dictionary<string,IRequestHandler>		_handlers;
         private 			IRequestHandler							_root;
 		private readonly 	bool	lite_server 		= 		false;		//by default, lite-server is disabled, when enabled - this will be true.
-
+		public readonly Regex CheckHost = new Regex(@"^(?<hostname>((?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?)|localhost)(?:(:(?<port>\d{1,5}))?)$", RegexOptions.Compiled); //regex to validate hostname/ip(+port, optionally). Result in ((CheckHost).Match(StringToValidateHostPort).Success)
         public HttpServer(NDB.PostDb db, string ip, int port, bool enable_lite_server = false, string large_POST_mode = "0", bool allowReput = false, bool bypassValidation = false)	//by default, lite-server is disabled.
         {
 			lite_server = enable_lite_server;
@@ -79,10 +79,10 @@ namespace NServer
 //					string[] often_requests = { /*"notif",*/ "threadsize", "scripts", "styles", "getlastn", "count"};	//don't show this often requests
 //		            
 //					if(!often_requests.Any(request.Address.Contains)){			//if request.Address not contains all often requests
-//
+//						//Dictionary<string, string> headerDictionary = new Dictionary<string, string>(request.Headers);foreach (KeyValuePair<string, string> kvp in headerDictionary){Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);}
 //						Console.WriteLine(
 //							((is_lite_server)?"Lite":"Full")+", "+DateTime.Now+	//show server, show time,
-//							": http://"+request.Host+request.Address			//and just show this request.
+//							": http://"+( ( ((CheckHost).Match(request.Host).Success)	== false ) ? request.Headers["Host"] : request.Host )+request.Address			//and just show this request.
 //						);
 //
 //						//Console.Write("\""+request.Address+"\", ");
@@ -136,7 +136,7 @@ namespace NServer
 				else if(endpoint == "shutdown"){
 					using (StreamWriter sw = File.AppendText("shutdown_requests.log")) 
 					{
-						sw.WriteLine(is_lite_server+", "+DateTime.Now+": http://"+request.Host+request.Address);
+						sw.WriteLine(is_lite_server+", "+DateTime.Now+": http://"+( ( ((CheckHost).Match(request.Host).Success)	== false ) ? request.Headers["Host"] : request.Host )+request.Address);
 						sw.WriteLine("connection.Request: "+connection.Request);
 						sw.WriteLine("\n");
 					}

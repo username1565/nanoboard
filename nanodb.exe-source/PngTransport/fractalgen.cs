@@ -8,9 +8,26 @@ namespace fractalgen
 {
 	public class Program
 	{
+		//int.Parse and Int32.Parse working bad for me.		See issue: https://github.com/nanoboard/nanoboard/issues/5
+		//So this function was been writed, to make this code more independent...
+		//Copy this method here, to make fractalgen independend from NBPack.cs.
+		//Now, this can be called as parse_number, not nbpack.NBPackMain.parse_number
+        public static int parse_number(string string_number)//this function return (int)number from (string)"number". Negative numbers supporting too.
+        {	if(string_number=="" || string_number == null){Console.WriteLine("NbPack.cs. parse_number. string_number is empty or null: (string_number == \"\"): "+string_number+", (string_number == null): "+(string_number == null)); return 0;}
+			string test = (new System.Text.RegularExpressions.Regex(@"\D")).Replace(string_number, "");
+            int test_length = test.Length;
+            int number = 0;
+            for(int i = ((char)test[0]=='-')?1:0; i < test_length; i++){
+                number += ((int)Char.GetNumericValue((char)test[i])*(int)Math.Pow(10,test_length-i-1));
+			}
+            number = ((char)test[0]=='-'?(0-number):(number));
+            return number;
+        }
+
 		//change ( ("string Main_" -> "void Main") and ("return string" -> "Console.ReadKey()") ) -> to compile this cs-file in standalone program.
-		//public static void Main(string[] args)	//two arguments can be specified - PNG width and height
-		public static string Main_(string[] args)		//return string, after:
+		public static string Result_Main = null;	//two arguments can be specified - PNG width and height
+		public static void Main(string[] args)	//two arguments can be specified - PNG width and height
+		//public static string Main(string[] args)		//return string, after:
 													//using fractalgen;
 													//string fractalgen_result = fractalgen.Program.Main_(new string[]{splitted[2], splitted[3]});
 		{
@@ -62,7 +79,7 @@ namespace fractalgen
 			
 					if(isNumericWidth==true){											//if numeric
 //						width = int.Parse(args[0+( (args.Length>=2)?skip:0 )] );										//to int
-						width = nbpack.NBPackMain.parse_number( args[0+( (args.Length>=2)?skip:0 )] );										//to int
+						width = parse_number( args[0+( (args.Length>=2)?skip:0 )] );										//to int
 					}
 					else{
 						//leave default value and show error...
@@ -76,7 +93,7 @@ namespace fractalgen
 						bool isNumericheight = int.TryParse(args[1+ ( (args.Length==2)?skip:0 )], out temp_integer);	//is numeric? true, false
 						if(isNumericheight==true){										//check this
 //							height = int.Parse(args[1+ ( (args.Length==3)?skip:0) ]);	 							//write as integer
-							height = nbpack.NBPackMain.parse_number(args[1+ ( (args.Length==3)?skip:0) ]);	 							//write as integer
+							height = parse_number(args[1+ ( (args.Length==3)?skip:0) ]);	 							//write as integer
 						}
 						else{//leave default value end show error...
 							System.Console.WriteLine(
@@ -95,7 +112,14 @@ namespace fractalgen
 			}
 			//Console.WriteLine("Press any key to exit...");
 			//Console.ReadKey();		//if "void Main" - don't close window, for standalone exe
-			return result;			//if "string Main_" - return string after including
+			//return result;			//if "string Main_" - return string after including
+			Result_Main = result;			//if "string Main_" - return string after including
+			return;
+		}
+		
+		public static string Main_(string[] args){
+			Main(args);
+			return Result_Main;
 		}
 	}
 

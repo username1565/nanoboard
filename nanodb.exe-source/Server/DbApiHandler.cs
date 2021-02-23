@@ -239,7 +239,7 @@ namespace NServer
         /*
         private void ParseContainers()
         {
-            NBPackMain.Main_(new []{"-a", 
+            NBPackMain.Main(new []{"-a", 
                 "http://" 
                 + Configurator.Instance.GetValue("ip", "127.0.0.1") 
                 + ":"
@@ -272,7 +272,7 @@ namespace NServer
 			_createAvail = false;
 			ThreadPool.QueueUserWorkItem(o => 
 			{
-				NBPackMain.Main_(p);
+				NBPackMain.Main(p);
 				_createAvail = true;
 			});
 			
@@ -298,7 +298,7 @@ namespace NServer
             _createAvail = false;
             ThreadPool.QueueUserWorkItem(o => 
             {
-                NBPackMain.Main_(new []
+                NBPackMain.Main(new []
                 {"-g", 
                     ((is_lite == true) ? "CreatePNG_on_lite_server" : ("http://"
                     + Configurator.Instance.GetValue("ip", "127.0.0.1")
@@ -704,6 +704,8 @@ namespace NServer
 				var found = new List<NDB.Post>();
 				
 				int limit = 500;
+//				Console.WriteLine("DbApiHandler.cs. Search. int limit: "+limit);	//maybe this change limit in MaxConsecZeros
+
 				if(splitted.Length==2){
 					limit = nbpack.NBPackMain.parse_number(splitted[1]);
 				}

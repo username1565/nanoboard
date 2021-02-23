@@ -89,6 +89,7 @@ namespace captcha
                 }
             }
 
+//			Console.WriteLine("hash: "+BitConverter.ToString(bytes).Replace("-", "")+", limit: "+limit+", Math.Max(max_len, len): "+Math.Max(max_len, len));
             return Math.Max(max_len, len);
         }
     }

@@ -28,7 +28,15 @@ namespace NServer
         {
             if (File.Exists(ConfigFileName))
             {
-                _keyValues = JsonConvert.DeserializeObject<Dictionary<string,string>>(File.ReadAllText(ConfigFileName));  
+                try{
+					string config_files_values = File.ReadAllText(ConfigFileName);
+					if(String.IsNullOrEmpty(config_files_values)){config_files_values = "{}";}
+					_keyValues = JsonConvert.DeserializeObject<Dictionary<string,string>>(config_files_values);
+				}
+				catch//(Exception ex)
+				{
+					//Console.WriteLine("Configurator.cs. exception: "+ex);	//error, when file not found or empty.
+				}
             }
         }
 
@@ -65,7 +73,7 @@ namespace NServer
             _keyValues[key] = value;
             var config = JsonConvert.SerializeObject(_keyValues, Formatting.Indented);
             File.WriteAllText(ConfigFileName, config);
-			if(key == "skin"){NServer.StylesHandler.Update_currentSkin();}
+			if(key == "skin" && value != ""){NServer.StylesHandler.Update_currentSkin();}
         }
     }
 }

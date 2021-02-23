@@ -14,7 +14,44 @@ set msbuild=%fdir%\v4.0.30319\msbuild.exe
 ::%msbuild% /p:OutputPath="../x64/" /p:IntermediateOutputPath="../x86/" /property:Configuration=Release nanodb.csproj
 
 ::x86 only, in the main folder. Ready to start.
-%msbuild% /p:IntermediateOutputPath="../" /property:Configuration=Release nanodb.csproj
+::	old line, not working now
+::%msbuild% /p:IntermediateOutputPath="../" /property:Configuration=Release nanodb.csproj
+
+::____________________________________________________________________________________________________________________________________________
+::		copy this files from their folders to "../"-folder, where libraties will be exists
+::		because without save this files in their folders, each exe is rewritted, after next compilation.
+::____________________________________________________________________________________________________________________________________________
+::		FractalGen.exe
+::%msbuild% /property:Configuration=Release /property:ReferencePath="bin\Debug\\" /property:StartupObject=fractalgen.Program /property:AssemblyName=FractalGen /p:IntermediateOutputPath="bin\\Release\\FractalGen\\" nanodb.csproj
+::COPY /D /V /Y "bin\Release\fractalgen\FractalGen.exe" "..\FractalGen.exe"
+
+::		NPBack.exe
+::%msbuild% /property:Configuration=Release /property:ReferencePath="bin\Debug\\" /property:StartupObject=nbpack.NBPackMain /property:AssemblyName=NBPack /p:IntermediateOutputPath="bin\\Release\\NBPack\\" nanodb.csproj
+::COPY /D /V /Y "bin\Release\nbpack\NBPack.exe" "..\NBPack.exe"
+
+::		Now, no need to save three .exe-files, and nanodb.exe can be runned as "nanodb NBPack [nbpack_args]" or "nanodb FractalGen [FractalGen_args]", and this cases was added in Program.cs.
+::		Compile as nanodb.exe
+%msbuild% /property:Configuration=Release /property:ReferencePath="bin\Debug\\" /property:StartupObject=NDB.MainClass /property:AssemblyName=nanodb nanodb.csproj
+COPY /D /V /Y "bin\Release\nanodb.exe" "..\nanodb.exe"
+::____________________________________________________________________________________________________________________________________________
+
+::		copy dll libraries in "../"-folder, because sometimes this not copied after compilation.
+@IF EXIST "..\Newtonsoft.Json.dll" (
+  REM if already exists - show this
+  echo "Do not copy Newtonsoft.Json.dll, because already exists!"
+) ELSE (
+  REM else, copy
+  COPY /D /V /Y "bin\Release\Newtonsoft.Json.dll" "..\Newtonsoft.Json.dll"
+)
+
+@IF EXIST "..\Chaos.NaCl.dll" (
+  REM if already exists - show this
+  echo "Do not copy Chaos.NaCl.dll, because already exists!"
+) ELSE (
+  REM else, copy
+  COPY /D /V /Y "bin\Release\Chaos.NaCl.dll" "..\Chaos.NaCl.dll"
+)
+::____________________________________________________________________________________________________________________________________________
 
 ::x64 only, in the main folder. Ready to start.
 ::%msbuild% /p:OutputPath="../" /property:Configuration=Release nanodb.csproj

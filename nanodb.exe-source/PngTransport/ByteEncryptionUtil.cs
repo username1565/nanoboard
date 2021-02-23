@@ -44,7 +44,7 @@ namespace nboard
 
         public static byte[] WrappedXor(byte[] input, string key)
         {
-            byte[] sha = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes(key));
+            byte[] sha = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes(key));	//Here can be the long chain of different hashes, like sha512hash(sha256hash(SCrypt(Keccak(blake256b(value))))). See WarpWallet: https://keybase.io/warp/
             byte[] output = new byte[input.Length];
 
             for (int i = 0; i < input.Length; i++)

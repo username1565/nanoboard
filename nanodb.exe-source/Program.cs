@@ -60,6 +60,16 @@ namespace NDB
 					){
 						notif_mode = (args[i]).Split(new string[]{"notif_mode"}, StringSplitOptions.None)[1];			//one digit, as string "0", "1", or "2";
 					}else if((args[i]).StartsWith("lite_images_timeout")){NServer.DbApiHandler.milliseconds_to_delete_generated_images = (double)nbpack.NBPackMain.parse_number((args[i]).Split(new string[]{"lite_images_timeout"}, StringSplitOptions.None)[1]); /*milliseconds_to_delete_generated_images*/}
+					else if((i == 0) && (args[0]).Contains("NBPack")){
+						args = args.Skip(1).ToArray();  
+						nbpack.NBPackMain.Main(args);
+						return;
+					}
+					else if((i == 0) && (args[0]).StartsWith("FractalGen")){
+						args = args.Skip(1).ToArray();  
+						fractalgen.Program.Main(args);
+						return;
+					}
 				}
 
 				//Console.WriteLine(DateTime.Now.ToString("R"));

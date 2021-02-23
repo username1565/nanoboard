@@ -634,7 +634,7 @@ namespace NServer
                         }
                         catch	(Exception ex)							//if exception
                         {
-							Console.WriteLine("TcpServer.cs. HandleClient. ConnectionAdded. 1-st functino (ascii).\nException:\n"+ex); //show this
+							Console.WriteLine("TcpServer.cs. HandleClient. ConnectionAdded. 1-st function (ascii).\nException:\n"+ex); //show this
                         }
                         finally
                         {

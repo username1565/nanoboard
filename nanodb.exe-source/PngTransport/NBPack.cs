@@ -15,9 +15,9 @@ namespace nbpack
 {
     public class NBPackMain
     {	public static bool allowReput = false;		//true if need to allow reput posts (deleted forever or damaged/corrupted posts will re-added in the database).
-        public static NDB.PostDb PostDatabase;
+        public static NDB.PostDb PostDatabase = null;
 		private static object _lock = new object();
-        public static void Main_(string[] args)
+        public static void Main(string[] args)
         {
             if (!Directory.Exists("upload"))
                 Directory.CreateDirectory("upload");
@@ -48,6 +48,7 @@ Other usages (may be useful if you're developing your own client):
     nbpack -u container.png crypto_key output.json           (unpack container)
 Sample JSON (note that message contains utf-8 BYTES converted to base64 string) 
  { ""posts"" : [ { ""hash"" : "".."", ""replyTo"" : "".."", ""message"" : ""base64"" }, .. ] }");
+				Console.ReadKey();	//do not close the window, if program was been runned by double-click, and wait to press any key.
                 return;
             }
 
@@ -139,6 +140,7 @@ Sample JSON (note that message contains utf-8 BYTES converted to base64 string)
 
         private static bool ByteCountUnder(List<NDB.Post> posts, int limit)
         {
+//			Console.WriteLine("NBPack.cs. ByteCountUnder: int limit: "+limit);	//maybe this change limit in MaxConsecZeros
             int byteCount = 0;
 
             foreach (var p in posts)

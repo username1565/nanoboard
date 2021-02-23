@@ -61,7 +61,7 @@ namespace NDB
 
             var post = p.replyto + message;
 
-            if (!captcha.Captcha.PostHasValidPOW(post) && !bypassValidation)
+            if (!bypassValidation && !captcha.Captcha.PostHasValidPOW(post))
             {
                 return false;
             }

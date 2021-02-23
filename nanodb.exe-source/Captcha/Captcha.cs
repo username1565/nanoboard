@@ -31,18 +31,21 @@ namespace captcha
         in the pack).
         The code extracts relevant captcha by index extracted from post's hash,
         and captcha is public ed25519 key, 32-byte seed encrypted by XORing with
-        SHA512(UTF-8(captcha answer + public key in hexstring form))
+        SHA512(UTF-8(captcha answer + public key in hexstring form))					//Here can be the long chain of different hashes, like sha512hash(sha256hash(SCrypt(Keccak(blake256b(value))))). See WarpWallet: https://keybase.io/warp/		
         and captcha image (1-bit) 50x20 pixels (column by column, each bit 
         represents a pixel (1 - black, 0 - white).
+		Each block of captcha-pack-file contains ed25519_public_key(32 bytes) + encrypted_seed(32 bytes) + 1000 bits captcha image(125 bytes * 8 = 1000 bits).
+		This file can be easy regenerated and just changed, but so hard to solve all captchas there for humans and computers.
+		Also, can be changed at any time, the default parameter "dummyMessage";
     */
     class Captcha
     {
         private static SHA256 _sha;
         private const int PowByteOffset = 3;
         private const int PowLength = 3;
-        private const int PowTreshold = 1;
+        private const int PowTreshold = 1;	//max value after null, to be accept this is consecutive nulls. Example: 000 so hard to be calculated, so "010", "100", "011", etc, is accepted too as "000"
         private const int CaptchaBlockLength = 32 + 32 + 125;
-        private const string DaraUriPngPrefix = "data:image/png;base64,";
+        private const string DataUriPngPrefix = "data:image/png;base64,";
         private const string CaptchaImageFileSuffix = ".png";
         public const string SignatureTag = "sign";
         private const string PowTag = "pow";
@@ -193,8 +196,13 @@ namespace captcha
 
 		
 		public static bool verify_captcha_hash(){
-            _packFile = Configurator.Instance.GetValue("captcha_pack_file", captcha_file);
-			captcha_downloading_url = Uri.UnescapeDataString(Configurator.Instance.GetValue("captcha_url", captcha_downloading_url));
+            try{
+				_packFile = Configurator.Instance.GetValue("captcha_pack_file", captcha_file);
+				captcha_downloading_url = Uri.UnescapeDataString(Configurator.Instance.GetValue("captcha_url", captcha_downloading_url));
+			}catch//(Exception ex)	//need to show exception
+			{
+				//Console.WriteLine("exception: "+ex);	//when nboard compilea as NBPack, configurator instance is not available.
+			}
 			
 			string captcha_file_hash = "";
 			if(!File.Exists(_packFile)){
@@ -226,8 +234,15 @@ namespace captcha
         static Captcha()
         {
             //_packFile = Configurator.Instance.GetValue("captcha_pack_file", "captcha.nbc");
-            _packFile = Configurator.Instance.GetValue("captcha_pack_file", captcha_file);
-            _sha = SHA256.Create();
+            try{
+				_packFile = Configurator.Instance.GetValue("captcha_pack_file", captcha_file);
+            }
+			catch//(Exception ex)
+			{
+				//Console.WriteLine("Captcha.cs. Captcha. Error get captcha-filename from configurator: Exception:"+ex+"\nNow, captcha file is \"captcha.nbc\"");
+				_packFile = "captcha.nbc";
+			}
+			_sha = SHA256.Create();
 			captcha_found = File.Exists(_packFile);			
         }
 
@@ -254,13 +269,27 @@ namespace captcha
         public string LoadImageAsDataUri()
         {
             if (_imageDataUri != null) return _imageDataUri;
+/*
             var bitmap = BitmapConvert.Convert(_imageBits);
             var imageFile = Guid.NewGuid().ToString() + CaptchaImageFileSuffix;
             bitmap.Save(imageFile);
-            var uri = DaraUriPngPrefix + Convert.ToBase64String(File.ReadAllBytes(imageFile));
+            var uri = DataUriPngPrefix + Convert.ToBase64String(File.ReadAllBytes(imageFile));
             File.Delete(imageFile);
-            _imageDataUri = uri;
+            _imageDataUri = uri;			
             return _imageDataUri;
+*/
+			//do this all, without save file on disk, and delete it.
+			using (var ms = new MemoryStream())
+			{
+				using (var bitmap = BitmapConvert.Convert(_imageBits))
+				{
+					bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+					var uri = DataUriPngPrefix + Convert.ToBase64String(ms.GetBuffer());
+					_imageDataUri = uri;			
+					return _imageDataUri;
+				}
+			}
+
         }
 
         public string AddSignatureToThePost(string post, string guess)
@@ -339,10 +368,12 @@ namespace captcha
 
         public static int CaptchaIndex(string post, int max)
         {
-			if(max==0){return 0;}						//% max, when max = 0 return error
+			if(max==0){return 0;}						//% max, when max = 0 return error. max == null when captcha-pack-file not found, and file.Length == 0
             post = post.ExceptSignature();
             var hash = ComputeHash(ExceptXmg(post));
+//			Console.WriteLine("CaptchaIndex. hash = ComputeHash(ExceptXmg(post)) = "+BitConverter.ToString(ComputeHash(ExceptXmg(post))).Replace("-", ""));
             if (hash.MaxConsecZeros(PowByteOffset, PowTreshold) < PowLength) return -1;
+//			Console.WriteLine("POW is ok... return captcha-index: "+((hash[0] + hash[1] * 256 + hash[2] * 256 * 256) % max));
             return (hash[0] + hash[1] * 256 + hash[2] * 256 * 256) % max;
         }
 
@@ -362,7 +393,7 @@ namespace captcha
                 hash = ComputeHash(xpost + trash);
             }
 
-//			Console.WriteLine("Catcha.cs. AddPow. trash: "+trash+", hash: "+BitConverter.ToString(hash).Replace("-", ""));
+//			Console.WriteLine("Catcha.cs. AddPow. trash: "+trash+", hash: "+BitConverter.ToString(hash).Replace("-", "")+", hash.MaxConsecZeros(PowByteOffset, PowTreshold): "+hash.MaxConsecZeros(PowByteOffset, PowTreshold));
             return post + trash;
         }
     }
