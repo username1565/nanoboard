@@ -43,6 +43,38 @@ set msbuild=%fdir%\v4.0.30319\msbuild.exe
 
 
 
+::	--- BEGIN Compile Newtonsoft.Json.dll v7.0.1 - Net35 (.NET Framework 3.5) ---
+:CheckJSONLib
+	::If not exists - compile
+	@IF NOT EXIST "bin\Debug\Newtonsoft.Json.dll" goto :CompileJSONLib
+	::If old precompiled .dll exists, rename it, using "move"-command
+	@IF EXIST "bin\Debug\Newtonsoft.Json.dll" IF NOT EXIST "bin\Debug\old_precompiled_Newtonsoft.Json.dll" goto :MoveOldJSONLib
+	::If chaos already exists, do not compile it.
+	@IF EXIST "bin\Debug\Newtonsoft.Json.dll" IF EXIST "bin\Debug\old_precompiled_Newtonsoft.Json.dll" goto :SkipCompileJSONLib
+
+:MoveOldJSONLib
+	move "bin\Debug\Newtonsoft.Json.dll" "bin\Debug\old_precompiled_Newtonsoft.Json.dll"
+	goto :CheckJSONLib
+
+:CompileJSONLib
+	::	Debug
+	%msbuild% /property:Configuration=Debug "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\Newtonsoft.Json.Net35.csproj"
+	::	Release
+	%msbuild% /property:Configuration=Release "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\Newtonsoft.Json.Net35.csproj"
+
+	::	copy bin, using xcopy
+	xcopy "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\bin\Debug\Net35" "bin\Debug" /E /H /C /I /Y
+	xcopy "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\bin\Release\Net35" "bin\Release" /E /H /C /I /Y
+	::	copy obj, using xcopy
+	xcopy "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\obj\Debug\Net35" "obj\Debug" /E /H /C /I /Y
+	xcopy "Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Src\Newtonsoft.Json\obj\Release\Net35" "obj\Release" /E /H /C /I /Y
+	goto :CheckJSONLib
+:SkipCompileJSONLib
+	::do nothing
+::	--- END Compile Newtonsoft.Json.dll v7.0.1 ---
+
+
+
 ::	Now, run compilation of "nanodb.exe"
 ::Without adding pathway to path
 ::%msbuild% /p:Configuration=Release nanodb.csproj
@@ -73,19 +105,21 @@ COPY /D /V /Y "bin\Release\nanodb.exe" "..\nanodb.exe"
 ::____________________________________________________________________________________________________________________________________________
 
 ::		copy dll libraries in "../"-folder, because sometimes this not copied after compilation.
-@IF EXIST "..\Newtonsoft.Json.dll" (
+@IF EXIST "..\Newtonsoft.Json.dll" and  EXIST "..\old_Newtonsoft.Json.dll"(
   REM if already exists - show this
   echo "Do not copy Newtonsoft.Json.dll, because already exists!"
 ) ELSE (
   REM else, copy
+  move "..\Newtonsoft.Json.dll" "..\old_Newtonsoft.Json.dll"
   COPY /D /V /Y "bin\Release\Newtonsoft.Json.dll" "..\Newtonsoft.Json.dll"
 )
 
-@IF EXIST "..\Chaos.NaCl.dll" (
+@IF EXIST "..\Chaos.NaCl.dll" and  EXIST "..\old_Chaos.NaCl.dll" (
   REM if already exists - show this
   echo "Do not copy Chaos.NaCl.dll, because already exists!"
 ) ELSE (
   REM else, copy
+  move "..\Chaos.NaCl.dll" "..\old_Chaos.NaCl.dll"
   COPY /D /V /Y "bin\Release\Chaos.NaCl.dll" "..\Chaos.NaCl.dll"
 )
 ::____________________________________________________________________________________________________________________________________________
