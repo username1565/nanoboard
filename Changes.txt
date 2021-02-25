@@ -7,7 +7,58 @@ This is available in releases, here is an only source code of this, not a compil
 
 BEGIN CHANGELOG:
 __________________________________________________________________________________________________________________________________________________________________
-(25.02.2021)	commit	(latest, unknown hash)	4 files changed with ? additions and ? deletions.
+(25.02.2021)	commit	(latest, unknown hash)	1 files changed with ? additions and ? deletions.
+	Update Changes.txt
+
+	/Changes.txt
+		Update changes in /Changes.txt - add hashes of commits, and describe previous commits, in Changes.txt.
+		Update additions and deletions, too.
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	8dd21427756ec7da5619abf5c1d7ee5d41122707 1 files changed with 1 addition and 1 deletion.
+	nanodb.exe-source/Newtonsoft.JSON.dll/Newtonsoft.Json-7.0.1/.gitignore
+		Rename gitignore -> .gitignore back
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	28d6cfee2c822402f1b07a85e1036c935ac500bb 1 files changed with 0 additions and 0 deletions.
+	nanodb.exe-source/Newtonsoft.JSON.dll/Newtonsoft.Json-7.0.1/.gitattributes
+		Rename gitattributes -> .gitattributes back
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	2885000fdbacadb62f4c01748e54466eee3518b9 51 files changed with 6,872 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (9/9) - +51 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	e31e1e319bc3e6583cefcc8242f53776021d8eea 100 files changed with 289,056 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (8/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	2327141f03fb5a7021957702bf1751f23025bd68 100 files changed with 5,485 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (7/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	14258e814aa67eabdc6944576c8f7c489067cf43 100 files changed with 43,783 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (6/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	bb2a4934b9df7d44c4d9c753e0ac8086fbdf41d6 100 files changed with 8,136 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (5/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	4bacc8f78b92ea4528ac7884e5aecb2f723100a5 100 files changed with 25,706 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (4/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	e569149572f441e9a1d5c3e4fa22a56082166f7c 100 files changed with 28,736 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (3/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	162610b4de3dc5d92d07ce82b9d19c452450ea98 100 files changed with 13,386 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (2/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	58819e009c708c251135014ff54c8325ed6fbece 100 files changed with 2,013 additions and 0 deletions.
+	Add source code of NewtonSoft.Json.dll (v7.0.1).
+	Chunk (1/9) - +100 files
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	df98a545da4d761dd989ce7130e3cd78efc97d03	4 files changed with 1,012 additions and 3 deletions.
 	2 files changed 2 files added, total 4 files updated, in 3 folders.
 
 Changes:
@@ -1092,7 +1143,7 @@ with 2 folders ( /nanodb.exe-source/ , /nanodb.exe-source/Chaos.NaCl.dll/ and /n
 Summary elements to upload is 97 files and 14 folders. Total 111 elements. 95 files added, 2 files changed in 14 folders (13 folders added).
 
 __________________________________________________________________________________________________________________________________________________________________
-(23.02.2021)	commit	unknown_hash	17 files changed with ? additions and ? deletions.
+(23.02.2021)	commit	d46eb0af004523391a8c5695bd311401f2aa873c	17 files changed with ? additions and ? deletions.
 17 files is different. Changed 15 files, added 2 files, 0 files was been deleted - in 5 folders.
 
 Short changes:
