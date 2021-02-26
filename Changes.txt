@@ -7,7 +7,114 @@ This is available in releases, here is an only source code of this, not a compil
 
 BEGIN CHANGELOG:
 __________________________________________________________________________________________________________________________________________________________________
-(25.02.2021)	commit	(latest, unknown hash)	1 files changed with ? additions and ? deletions.
+(27.02.2021)	commit	(latest, unknown hash)	96 files changed with ? additions and ? deletions.
+	Change EOL from LF to CRLF
+		
+Change "\n" to "\r\n" in compile.bat, for generated file "version.txt".
+	\nanodb.exe-source\compile.bat
+
+Add this changes, in this file - Changes.txt
+	\Changes.txt
+		
+Change End-Of-Line, from LF to CRLF for 94 files.
+	\nanodb.exe-source\Captcha\BitmapConvert.cs
+	\nanodb.exe-source\Captcha\ByteStringExt.cs
+	\nanodb.exe-source\Captcha\Captcha.cs
+	\nanodb.exe-source\Captcha\PostSignatureExt.cs
+	\nanodb.exe-source\Database\PostDb.cs
+	\nanodb.exe-source\PngTransport\Aggregator.cs
+	\nanodb.exe-source\PngTransport\CurlWebClient.cs
+	\nanodb.exe-source\PngTransport\NBPack.cs
+	\nanodb.exe-source\PngTransport\Post.cs
+	\nanodb.exe-source\PngTransport\Posts.cs
+	\nanodb.exe-source\PngTransport\WebClientX.cs
+	\nanodb.exe-source\Server\ActionHandler.cs
+	\nanodb.exe-source\Server\CaptchaTracker.cs
+	\nanodb.exe-source\Server\Configurator.cs
+	\nanodb.exe-source\Server\DbApiHandler.cs
+	\nanodb.exe-source\Server\ErrorHandler.cs
+	\nanodb.exe-source\Server\FileHandler.cs
+	\nanodb.exe-source\Server\GetCaptchaImageHandler.cs
+	\nanodb.exe-source\Server\GetCaptchaTokenHandler.cs
+	\nanodb.exe-source\Server\HttpConnection.cs
+	\nanodb.exe-source\Server\HttpRequest.cs
+	\nanodb.exe-source\Server\HttpResponse.cs
+	\nanodb.exe-source\Server\HttpServer.cs
+	\nanodb.exe-source\Server\HttpServerBuilder.cs
+	\nanodb.exe-source\Server\IRequestHandler.cs
+	\nanodb.exe-source\Server\MimeType.cs
+	\nanodb.exe-source\Server\NotificationHandler.cs
+	\nanodb.exe-source\Server\SolveCaptchaAndAddPostHandler.cs
+	\nanodb.exe-source\Server\StatusCode.cs
+	\nanodb.exe-source\Server\StylesHandler.cs
+	\nanodb.exe-source\Server\TcpServer.cs
+	\nanodb.exe-source\nanodb.userprefs
+	\pages\download_as_binary.html
+	\pages\draw_image.html
+	\pages\generate_date_for_version.html
+	\pages\generate_HTTP(S)_links.html
+	\pages\index.html
+	\pages\Open_container.html
+	\pages\params.html
+	\pages\test_captcha.html
+	\pages\TEST_download-upload-posts.html
+	\pages\version.txt
+	\pages_lite\download_as_binary.html
+	\pages_lite\draw_image.html
+	\pages_lite\generate_HTTP(S)_links.html
+	\pages_lite\index.html
+	\pages_lite\Open_container.html
+	\pages_lite\params.html
+	\pages_lite\TEST_download-upload-posts.html
+	\pages_lite\version.txt
+	\scripts\api.js
+	\scripts\checkver.js
+	\scripts\img2base64.js
+	\scripts\init.js
+	\scripts\jquery-1.12.0.js
+	\scripts\last.js
+	\scripts\nanoclient.js
+	\scripts\notif.js
+	\scripts\on_add.js
+	\scripts\params.js
+	\scripts\post.js
+	\scripts\reply.js
+	\scripts\retranslate.js
+	\scripts\search.js
+	\scripts\sha256.js
+	\scripts_lite\api.js
+	\scripts_lite\base64.js
+	\scripts_lite\bootstrap.min.js
+	\scripts_lite\checkver.js
+	\scripts_lite\filesaver.min.js
+	\scripts_lite\img2base64.js
+	\scripts_lite\init.js
+	\scripts_lite\jquery-1.12.0.js
+	\scripts_lite\jquery.min.js
+	\scripts_lite\last.js
+	\scripts_lite\nanoclient.js
+	\scripts_lite\notif.js
+	\scripts_lite\on_add.js
+	\scripts_lite\params.js
+	\scripts_lite\post.js
+	\scripts_lite\reply.js
+	\scripts_lite\retranslate.js
+	\scripts_lite\search.js
+	\scripts_lite\sha256.js
+	\scripts_lite\ui-functions.js
+	\styles\skins\dark\nano.css
+	\styles\skins\futaba\bootstrap.min.css
+	\styles\skins\futaba\nano.css
+	\styles\skins\futaba\notif.css
+	\styles\skins\photon\nano.css
+	\styles\nano.css
+	\externalIPservices.txt
+	\proxy.txt
+	\README.md
+
+That's all.
+__________________________________________________________________________________________________________________________________________________________________
+(25.02.2021)	commit	338c00e1b3f4f7da22b906ad151fe313c078be4f 1 files changed with 53 additions and 2 deletions.
 	Update Changes.txt
 
 	/Changes.txt

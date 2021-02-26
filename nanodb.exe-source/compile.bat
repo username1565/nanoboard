@@ -179,12 +179,12 @@ setlocal EnableDelayedExpansion
 ::Delete previous file if exists
 del "../pages/version.txt"
 ::Write date and time - with LF and without CRLF in the end:
-set /p ="%DOW% %Mon%  %Day% %TIME:~0,-3% EST %YEAR%!\n!"<nul >> "../pages/version.txt"
+set /p ="%DOW% %Mon%  %Day% %TIME:~0,-3% EST %YEAR%!\r\n!"<nul >> "../pages/version.txt"
 
 ::Delete previous file if exists
 del "../pages_lite/version.txt"
 ::Write date and time - with LF and without CRLF in the end:
-set /p ="%DOW% %Mon%  %Day% %TIME:~0,-3% EST %YEAR%!\n!"<nul >> "../pages_lite/version.txt"
+set /p ="%DOW% %Mon%  %Day% %TIME:~0,-3% EST %YEAR%!\r\n!"<nul >> "../pages_lite/version.txt"
 
 :: if no need to running, after compilation
 ::	goto end
