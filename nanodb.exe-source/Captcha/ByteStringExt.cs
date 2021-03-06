@@ -24,6 +24,20 @@ namespace captcha
             return sb.ToString();
         }
 
+		//int.Parse and Int32.Parse working bad for me.		See issue: https://github.com/nanoboard/nanoboard/issues/5
+		//So this function was been writed, to make this code more independent...
+        public static int parse_number(this string string_number)//this function return (int)number from (string)"number". Negative numbers supporting too.
+        {	if(string_number=="" || string_number == null){Console.WriteLine("NbPack.cs. parse_number. string_number is empty or null: (string_number == \"\"): "+string_number+", (string_number == null): "+(string_number == null)); return 0;}
+			string test = (new System.Text.RegularExpressions.Regex(@"\D")).Replace(string_number, "");
+            int test_length = test.Length;
+            int number = 0;
+            for(int i = ((char)test[0]=='-')?1:0; i < test_length; i++){
+                number += ((int)Char.GetNumericValue((char)test[i])*(int)Math.Pow(10,test_length-i-1));
+			}
+            number = ((char)test[0]=='-'?(0-number):(number));
+            return number;
+        }
+
         public static byte[] Bytify(this string @string)
         {
 			//when database is corrupted and damaged,

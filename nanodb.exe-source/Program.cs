@@ -70,6 +70,11 @@ namespace NDB
 						fractalgen.Program.Main(args);
 						return;
 					}
+					else if((i == 0) && (args[0]).StartsWith("CaptchaGen")){
+						args = args.Skip(1).ToArray();  
+						CaptchaPack_Generator.Program.Main(args); //See Captcha.cs
+						return;
+					}
 				}
 
 				//Console.WriteLine(DateTime.Now.ToString("R"));

@@ -1,21 +1,42 @@
 Code commented. See source code.
 Compiled version of all project - is the file "nanodb.exe"
 See changes in other commits - here: https://github.com/username1565/nanoboard/network
-
+		
 nanodb.exe - this is a compiled binary file, as result of compilation this source code.
 This is available in releases, here is an only source code of this, not a compiled exe.
-
+		
 BEGIN CHANGELOG:
 __________________________________________________________________________________________________________________________________________________________________
-(27.02.2021)	commit	(latest, unknown hash)	96 files changed with ? additions and ? deletions.
+(06.03.2021)	commit	(latest, unknown hash)	96 files changed with 46,571 additions and 46,464 deletions.
+	Add captcha-generator.
+		\nanodb.exe-source\Captcha\ByteStringExt.cs
+			Add parse_number there.
+		
+		\nanodb.exe-source\Captcha\Captcha.cs
+			Lines 19 - 23	:	Add usings for captcha-generator.
+			Lines 48 - 55	:	Define "private sha" as null, and add "public static SHA256 _sha_public" to let get hash of captcha-pack.
+			Lines 73 - 76	:	Define "private _packFile", and add "pubblic _packFile_public" to let get captcha-pack filename.
+			Lines 277 - 280	:	Add this public methods to get values for current captcha.
+			Line 413		:	Add comment.
+			Lines 419 - 420	:	Add comments.
+			Lines 423 - 975	:	Add code from https://github.com/username1565/nanoboard_Captcha_Pack_Generator/blob/8825757e25c183c0cf599d7486d10ec17c5b9437/src/Captcha_Pack_Generator.cs
+								And comment unused code from standalone captcha-generator.
+
+		\nanodb.exe-source\Program.cs
+			Change EOL from LF to CRLF
+			Lines 73 - 77	:	Add case to run captcha-generator by running nanodb with command-line argument "CaptchaGen".
+		
+		\Changes.txt - update changes in this file.
+__________________________________________________________________________________________________________________________________________________________________
+(27.02.2021)	commit	afad97384609b19774a7364407bed8bf32b8fff5	96 files changed with 46,571 additions and 46,464 deletions.
 	Change EOL from LF to CRLF
 		
 Change "\n" to "\r\n" in compile.bat, for generated file "version.txt".
 	\nanodb.exe-source\compile.bat
-
+		
 Add this changes, in this file - Changes.txt
 	\Changes.txt
-		
+	
 Change End-Of-Line, from LF to CRLF for 94 files.
 	\nanodb.exe-source\Captcha\BitmapConvert.cs
 	\nanodb.exe-source\Captcha\ByteStringExt.cs
@@ -67,20 +88,20 @@ Change End-Of-Line, from LF to CRLF for 94 files.
 	\pages_lite\params.html
 	\pages_lite\TEST_download-upload-posts.html
 	\pages_lite\version.txt
-	\scripts\api.js
+\scripts\api.js
 	\scripts\checkver.js
 	\scripts\img2base64.js
 	\scripts\init.js
 	\scripts\jquery-1.12.0.js
-	\scripts\last.js
-	\scripts\nanoclient.js
+\scripts\last.js
+\scripts\nanoclient.js
 	\scripts\notif.js
 	\scripts\on_add.js
 	\scripts\params.js
-	\scripts\post.js
-	\scripts\reply.js
+\scripts\post.js
+\scripts\reply.js
 	\scripts\retranslate.js
-	\scripts\search.js
+\scripts\search.js
 	\scripts\sha256.js
 	\scripts_lite\api.js
 	\scripts_lite\base64.js
@@ -104,12 +125,12 @@ Change End-Of-Line, from LF to CRLF for 94 files.
 	\scripts_lite\ui-functions.js
 	\styles\skins\dark\nano.css
 	\styles\skins\futaba\bootstrap.min.css
-	\styles\skins\futaba\nano.css
+\styles\skins\futaba\nano.css
 	\styles\skins\futaba\notif.css
 	\styles\skins\photon\nano.css
 	\styles\nano.css
 	\externalIPservices.txt
-	\proxy.txt
+		\proxy.txt
 	\README.md
 
 That's all.
@@ -220,7 +241,7 @@ git config --global core.autocrlf <PreviousValue>
 \nanodb.exe-source\Newtonsoft.JSON.dll\Compile_Newtonsoft.Json.dll_v7.0.1_Net35.bat
 \nanodb.exe-source\compile.bat
 \Changes.txt
-		
+
 	Next 9 commits will contains the chunks with source code of NewtonSoft.Json.dll (v7.0.1).
 		Chunk (1/9) - +100 files:
 \nanodb.exe-source\Newtonsoft.JSON.dll\Newtonsoft.Json-7.0.1\Build\build.ps1
@@ -1282,7 +1303,7 @@ Full changes:
 
 \Database\PostsValidator.cs
 	Line	64			:	Check pow only when bypassValidation false.
-	
+
 \PngTransport\ByteEncryptionUtil.cs
 	Line	47			:	Add comment about posibility to use chains of hashes, there.
 
@@ -1293,13 +1314,13 @@ Full changes:
 	Line	96			:	Use parse_number instead of "nbpack.NBPackMain.parse_number".
 	Lines	115	-	123	:	Write result in Result_Main, and add "string Main_" to return this string.
 	Now this can working as "void Main" to generate without return result, or as "string Main_", and return string result, then.
-
+		
 \PngTransport\NBPack.cs
 	Line	18			:	Use null for "PostDatabase", on start.
 	Line	20			:	Change "Main_" to "Main".
 	Line	51			:	Add Console.ReadKey(); to do not close console-window with help-usage.
 	Line	143			:	Add commented Console.WriteLine in "ByteCountUnder". Just for test.
-	
+
 \Server\Configurator.cs
 	Lines	31	-	39	:	Try to read config, and catch if this was been damaged.
 	Line	76			:	Update skin if value not empty, and when target skin is specified.
@@ -2459,7 +2480,7 @@ Changes and additions:
 				Turn this to true, after call this method, and to false, before each return.
 			Comment the code in the method Flush(), and turn back old code. Maybe this will not write null bytes, if file will be unlocked.
 			Now, there is no any throw exceptions, about file is busy by another process...
-	
+
 		\nanodb.exe-source\PngTransport\WebClientX.cs
 			Fix OutOfMemoryException:
 				Make WebClientX IDisposable
@@ -2598,7 +2619,7 @@ nanodb.exe-source\Database\PostDb.cs
 	Lines 596 - 598:	GetReplies method - rewrited. Skip deleted_forever posts.
 	Line	628:		Return default date if (a == null)
 	Lines 699 - 711:	Flush method rewrited. Write _index (index-3.json) after verification, because sometimes there is null bytes.
-	
+
 nanodb.exe-source\Server\DbApiHandler.cs
 	Line 489:			Try to add fast GetReplies, but code was been commented.
 	Line 699:			Add 999 times to try to delete post (was been 100).
@@ -2607,7 +2628,7 @@ nanodb.exe-source\Server\DbApiHandler.cs
 
 nanodb.exe-source\compile.bat
 	Line 69. Add exit to close window on press by any key.
-	
+
 nanodb.exe-source\start_compile.bat
 	Add start compile.bat to run this from command line.
 		Now, compilation can be runned by next steps:
@@ -2617,7 +2638,7 @@ nanodb.exe-source\start_compile.bat
 		4. Wait compilation. Press any key in the end.
 		5. Window closed. Success. No any WMICTempBatchFile.bat created and WMIC working good in this case.
 
-
+	
 \scripts\api.js
 	Lines 23 - 30: 	function deletePostFromDb changed.
 						Add get-query and console.log when this .done
@@ -2637,7 +2658,7 @@ nanodb.exe-source\start_compile.bat
 	Lines 9 - 39:		Remove test console.log
 	Lines 219 - 226:	skip '[' in url.
 	Line 320:			Add style for <pre> with code.
-
+	
 \scripts\reply.js
 	Lines 477 - 497:	In function validate_symbols - add autosend captcha, when '\n' in the end (Enter key pressed).
 	Lines 512 - 536:	Add function to close powModal and captchaModal onclick outside, like for "Insert image" modal.
@@ -2703,7 +2724,7 @@ Source code:
 									and return unsetted date on catch.
 					603:			Add .Reverse()
 				608, 637:		Add commented code to see sorted array and dates by which this was been sorted.
-				
+
 	\nanodb.exe-source\PngTransport\Aggregator.cs
 				688, 728:		Add try-catch for all stadies of parsing.
 				757:			Add display InProgress when catch.
@@ -2719,11 +2740,11 @@ Source code:
 			471:				Just increment posts_added++;
 			473-503:			Show numbers of available posts, added posts and skipped posts - in notif only.
 									try-catch added, code commented.
-	
+
 	\nanodb.exe-source\Server\DbApiHandler.cs
 			487-488:		Change Convert.ToInt32 to nbpack.NBPackMain.parse_number. Now value "5" parsing good.
-			
-			
+
+
 	\pages\index.html
 			362-364:		Just add _detectURLs === 'true' to disable replace local quotes, when Detect URLs = false in Settings.
 
@@ -2731,7 +2752,7 @@ Source code:
 			41-44:			Add console.log with synthesis the link with escaped URL.
 							This link can be used to initialize downloading from API of remote nanodb.exe.
 							Downloading test passed. Non existing posts was been successfully added.
-			
+	
 	\scripts\init.js	 - small fix of text and add post.query to save pictures in download folder. save_files parameter there.
 							After disable posts in notification - collect from thread http://02ch.su/b/res/7379.html
 							is successfully, also success for saving all pictures in download,
@@ -2766,7 +2787,7 @@ Source code:
 	\scripts\reply.js
 		Line 597:		Change client version from 3.1 to 3.2
 		Line 629-697:	Add double quotes and add buttons for tags [o], [quote], [sub], [sup], [code] in reply window.
-		
+
 	\scripts\search.js
 		Lines 50-274:	Search by hash and return post/thread/cathegory, if search query seems like hash of post.
 		
@@ -2850,7 +2871,7 @@ Short changes:
 	Parameters in params.html now displaing as table. Link to check updates online added there.
 	Small-fixes.
 	
-	
+
 Full changes:
 	Source code:
 		\nanodb.exe-source\Server\DbApiHandler.cs
@@ -2863,31 +2884,31 @@ Full changes:
 			Lines 573-582:		Add function isMD5() to validate hash format.
 			Lines 583-642:		Add function to download posts by any URL with API.
 			Lines 644-660:		Add function to upload posts to API.
-
+	
 		\nanodb.exe-source\PngTransport\Aggregator.cs
 			Lines 499-601: 		Try to rewrite function Method DownloadPNG to download any files (captcha.nbc, as example), using proxies.
 							Add option to download large file, using proxies. For example, captcha.nbc.
-		
+	
 		\nanodb.exe-source\PngTransport\WebClientX.cs
 			Lines 92-96:		Add method DownloadFile for WebClientX, to download file, using proxy.
-
+	
 	Styles:
 		\styles\skins\futaba\nano.css
 			Lines 7-10:			Add background color for tables in futaba skin.
-
+	
 	Scripts:
 		\scripts\checkver.js
 			Line 66:			Enable checkVersion check online onclick by link, if online===true
-		
+
 		\scripts\init.js
 			Line 257-342:		Update total_posts_available up to postCount after finishing collect PNG.
 								fix default value in function check_avails(hide=false) to make this working in Google Chrome
-
-		
+							
+	
 		\scripts\last.js
 			Lines 52-80:		Changes in function showLast.
 								fix default value in function showLast(N, from_index=false) to make this working in Google Chrome.
-
+	
 		\scripts\nanoclient.js
 			Replace unknown files to links. Now this can be downloaded as txt files with binary code, and renamed then.
 			Add supporting RIFF-files - .webp, .wav, .avi.
@@ -2905,21 +2926,21 @@ Full changes:
 			//now this value not hardcoded in the method Search in \Server\DbApiHandler.cs
 			var post_count_limit_for_searching = 500;
 			fix serarhing value in base64 fragment of picture.
-
+	
 	Pages:
 		pages\index.html
 			Add code to display posts onclick or by input hashes. Add code to check hash in input value.
 	
 		pages\Open_container.html
 			Lines 187-203:	Add test code to try download captcha.nbc from github. Fail, because dynamic link...
-
+	
 		pages\params.html
 			Change displaing params as table.
-	
+
 		pages\version.txt
 		\nanodb.exe
 			Regenerated, after compilation.
-
+	
 		pages\TEST_download-upload-posts.html
 			Added the function for download-posts by custom URL with API and upload-posts to custom URL, using API.
 			See pages/TEST_download-upload-posts.html source code.
@@ -3069,7 +3090,7 @@ Server\
 		This need to return correct mime-type of file in "download" folder.
 		Add filelist there and switch this to PNG-only, by default.
 			Now is possible to make collectPNG from http://127.0.0.1:7376/download/
-			
+
 	MimeType.cs
 		Add specified string for "dynamic" mime type. This means mime-type select by file extension in "download folder".
 __________________________________________________________________________________________________________________________________________________________________
@@ -3101,7 +3122,7 @@ Changes in /root folder
 
 Changes in "upload/" folder
 	-	MORE-secrets-inside.png		- add some container to test unpack
-	
+
 Changes in	"styles/"
 	- 	\skins\futaba\nano.css
 			Change futaba style.
